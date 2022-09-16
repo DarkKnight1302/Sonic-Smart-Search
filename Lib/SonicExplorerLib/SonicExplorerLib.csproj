@@ -123,13 +123,30 @@
     <Compile Include="BackgroundTaskBase.cs" />
     <Compile Include="BackgroundTaskImpl\InstalledConfigTaskImpl.cs" />
     <Compile Include="BackgroundTaskImpl\TimerTaskImpl.cs" />
+    <Compile Include="ContentIndexer.cs" />
     <Compile Include="DisposableBackgroundTaskDeferral.cs" />
+    <Compile Include="LuceneContentSearch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\SonicExplorerLib.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Lucene.Net">
+      <Version>4.8.0-beta00016</Version>
+    </PackageReference>
+    <PackageReference Include="Lucene.Net.Analysis.Common">
+      <Version>4.8.0-beta00016</Version>
+    </PackageReference>
+    <PackageReference Include="Lucene.Net.Queries">
+      <Version>4.8.0-beta00016</Version>
+    </PackageReference>
+    <PackageReference Include="Lucene.Net.QueryParser">
+      <Version>4.8.0-beta00016</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
+    </PackageReference>
+    <PackageReference Include="ReactiveUI">
+      <Version>18.3.1</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

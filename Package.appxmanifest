@@ -61,6 +61,7 @@
 	<Capabilities>
 		<rescap:Capability Name = "extendedBackgroundTaskTime"/>
 		<rescap:Capability Name = "broadFileSystemAccess"/>
+		<rescap:Capability Name = "documentsLibrary"/>
 		<Capability Name="internetClient" />
 	</Capabilities>
 </Package>

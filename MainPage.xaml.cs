@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SonicExplorerLib;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,9 +23,21 @@ namespace SonicExplorer
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private LuceneContentSearch search;
+
         public MainPage()
         {
             this.InitializeComponent();
+            ContentIndexer.GetInstance.IndexingPercentageObservable.Subscribe(value =>
+            {
+                this.IndexingBar.Value = value;
+            });
+            search = new LuceneContentSearch();
+        }
+
+        private void mySearchBox_QuerySubmitted(SearchBox sender, SearchBoxQuerySubmittedEventArgs args)
+        {
+            search.GetFilePaths(args.QueryText.ToLower());
         }
     }
 }

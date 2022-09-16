@@ -30,7 +30,6 @@ namespace SonicExplorerLib.BackgroundTaskImpl
 
         protected override IEnumerable<IBackgroundCondition> TriggerConditions => new IBackgroundCondition[]
        {
-            new SystemCondition(SystemConditionType.InternetAvailable),
             new SystemCondition(SystemConditionType.UserPresent),
        };
 
@@ -38,18 +37,7 @@ namespace SonicExplorerLib.BackgroundTaskImpl
 
         protected override async Task RunAsync(IBackgroundTaskInstance taskInstance, CancellationToken token)
         {
-            Debug.WriteLine($"Run called");
-            System.Timers.Timer t = new Timer(1000);
-            t.Elapsed += T_Elapsed;
-            t.Enabled = true;
-            t.Start();
-            await Task.Delay(Timeout.Infinite).ConfigureAwait(false);
-        }
-
-        private void T_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            count++;
-            Debug.WriteLine($"Timer count value : {count}");
+            await ContentIndexer.GetInstance.IndexDataInBackground();
         }
     }
 }

@@ -9,6 +9,13 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <SearchBox x:Name="mySearchBox"
+                       QuerySubmitted="mySearchBox_QuerySubmitted"
+                       FocusOnKeyboardInput="True"
+                       Width="500"/>
+            <ProgressBar x:Name="IndexingBar" IsIndeterminate="False" Width="500" >
+            </ProgressBar>
+        </StackPanel>
     </Grid>
 </Page>

@@ -1,14 +1,17 @@
-﻿using SonicExplorerLib.BackgroundTaskImpl;
+﻿using SonicExplorerLib;
+using SonicExplorerLib.BackgroundTaskImpl;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -39,7 +42,7 @@ namespace SonicExplorer
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
             TimerTaskImpl.Instance.Register();
             Debug.WriteLine($"Value of count : {TimerTaskImpl.Instance.GetCount}");
@@ -75,6 +78,13 @@ namespace SonicExplorer
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
+
+            //ContentIndexer.GetInstance.DeleteAllIndexData();
+            _ = Task.Run(async () => await ContentIndexer.GetInstance.IndexData());
+           /* var search = new LuceneContentSearch();
+            //search.GetFilePaths("boarding pass");
+            search.GetFilePaths("asset");
+            search.GetFilePaths("oxyplot");*/
         }
 
         /// <summary>
