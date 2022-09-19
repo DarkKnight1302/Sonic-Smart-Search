@@ -13,7 +13,8 @@
             <SearchBox x:Name="mySearchBox"
                        QuerySubmitted="mySearchBox_QuerySubmitted"
                        FocusOnKeyboardInput="True"
-                       Width="500"/>
+                       Width="500"
+                       IsEnabled="{x:Bind AllowSearch, Mode=OneWay}"/>
             <ProgressBar x:Name="IndexingBar" IsIndeterminate="False" Width="500" >
             </ProgressBar>
         </StackPanel>

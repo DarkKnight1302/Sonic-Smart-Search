@@ -127,6 +127,7 @@
     <Compile Include="DisposableBackgroundTaskDeferral.cs" />
     <Compile Include="LuceneContentSearch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SettingsContainer.cs" />
     <EmbeddedResource Include="Properties\SonicExplorerLib.rd.xml" />
   </ItemGroup>
   <ItemGroup>

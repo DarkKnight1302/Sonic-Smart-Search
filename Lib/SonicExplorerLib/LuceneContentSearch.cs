@@ -7,27 +7,41 @@ using Lucene.Net.Store;
 using Lucene.Net.Index;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace SonicExplorerLib
 {
     public class LuceneContentSearch
     {
-        private StandardAnalyzer analyzer;
-        private IndexSearcher searcher;
-
+        private string[] IndexedLocations = { "documents", "downloads" };
+        private List<IndexSearcher> searchers = new List<IndexSearcher>();
+ 
         public LuceneContentSearch()
         {
             // Construct a machine-independent path for the index
-            string basePath = Environment.GetFolderPath(
-               Environment.SpecialFolder.CommonApplicationData);
-            string indexPath = Path.Combine(basePath, "hyperXindex");
-            analyzer = new StandardAnalyzer(Lucene.Net.Util.LuceneVersion.LUCENE_48);
-            var dir = FSDirectory.Open(indexPath);
-            var reader = DirectoryReader.Open(dir);
-            searcher = new IndexSearcher(reader);
+            foreach (string location in IndexedLocations)
+            {
+                string basePath = Environment.GetFolderPath(
+                   Environment.SpecialFolder.CommonApplicationData);
+                string indexPath = Path.Combine(basePath, $"hyperXindex-{location}");
+                var dir = FSDirectory.Open(indexPath);
+                var reader = DirectoryReader.Open(dir);
+                var searcher = new IndexSearcher(reader);
+                searchers.Add(searcher);
+            }
         }
 
-        public List<string> GetFilePaths(string keyword)
+        public async void SearchForFileOrFolder(string keyword)
+        {
+            List<Task> searchTasks = new List<Task>();
+            foreach (IndexSearcher searcher in searchers)
+            {
+                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword)));
+            }
+            await Task.WhenAll(searchTasks).ConfigureAwait(false);
+        }
+
+        private void GetFilePaths(IndexSearcher searcher, string keyword)
         {
             TermQuery termQuery = new TermQuery(new Term("name", keyword));
             TopDocs docs = searcher.Search(termQuery, 3);
@@ -44,7 +58,7 @@ namespace SonicExplorerLib
             }
             if (docs.TotalHits == 0)
             {
-                return null;
+                return;
             }
             foreach (ScoreDoc hit in docs.ScoreDocs)
             {
@@ -52,7 +66,6 @@ namespace SonicExplorerLib
                 paths.Add(foundDoc.Get("path"));
                 Debug.WriteLine($"Path found {foundDoc.Get("path")}");
             }
-            return paths;
         }
     }
 }

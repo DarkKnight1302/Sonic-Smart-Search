@@ -32,12 +32,17 @@ namespace SonicExplorer
             {
                 this.IndexingBar.Value = value;
             });
-            search = new LuceneContentSearch();
+            if (SettingsContainer.instance.Value.GetValue<bool>("indexingComplete") == true)
+            {
+                search = new LuceneContentSearch();
+            }
         }
+
+        public bool AllowSearch => SettingsContainer.instance.Value.GetValue<bool>("indexingComplete") == true;
 
         private void mySearchBox_QuerySubmitted(SearchBox sender, SearchBoxQuerySubmittedEventArgs args)
         {
-            search.GetFilePaths(args.QueryText.ToLower());
+            search.SearchForFileOrFolder(args.QueryText.ToLower());
         }
     }
 }

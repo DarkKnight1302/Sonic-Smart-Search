@@ -24,19 +24,15 @@ namespace SonicExplorerLib
 
         public static ContentIndexer GetInstance => Instance.Value;
         private object indexLock = new object();
-        private string basePath;
-        private string indexPath;
         private StandardAnalyzer analyzer;
         private int indexingPercent = 0;
         private string userProfile;
         private int nestingLevel = 1;
+        private string[] IndexedLocations = { "documents", "downloads" };
 
         private ContentIndexer()
         {
             // Construct a machine-independent path for the index
-            basePath = Environment.GetFolderPath(
-               Environment.SpecialFolder.CommonApplicationData);
-            indexPath = Path.Combine(basePath, "hyperXindex");
             analyzer = new StandardAnalyzer(Lucene.Net.Util.LuceneVersion.LUCENE_48);
             userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
@@ -58,6 +54,43 @@ namespace SonicExplorerLib
 
         public async Task IndexData()
         {
+            StorageFolder documentsFolder = KnownFolders.DocumentsLibrary;
+            StorageFolder downloadsFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Downloads");
+            List<Task> indexingTasks = new List<Task>();
+            indexingTasks.Add(Task.Run(async () =>
+            {
+                await IndexDataForLocation(IndexedLocations[0], documentsFolder);
+                this.IndexingPercentage = this.indexingPercent + 25;
+            }));
+            indexingTasks.Add(Task.Run(async () =>
+            {
+                await IndexDataForLocation(IndexedLocations[1], downloadsFolder);
+                this.IndexingPercentage = this.indexingPercent + 25;
+            }));
+            Task.WaitAll(indexingTasks.ToArray());
+            this.IndexingPercentage = 100;
+        }
+
+        public async Task IndexDataInBackground()
+        {
+            StorageFolder documentsFolder = KnownFolders.DocumentsLibrary;
+            StorageFolder downloadsFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Downloads");
+            List<Task> indexingTasks = new List<Task>();
+            indexingTasks.Add(Task.Run(async () =>
+            {
+                await IndexDataForLocation(IndexedLocations[0], documentsFolder);
+            }));
+            indexingTasks.Add(Task.Run(async () =>
+            {
+                await IndexDataForLocation(IndexedLocations[1], downloadsFolder);
+            }));
+        }
+
+        public async Task IndexDataForLocation(string location, StorageFolder storageFolder)
+        {
+            string basePath = Environment.GetFolderPath(
+              Environment.SpecialFolder.CommonApplicationData);
+            string indexPath = Path.Combine(basePath, $"hyperXindex-{location}");
             using (var dir = FSDirectory.Open(indexPath))
             {
                 var indexWriterConfig = new IndexWriterConfig(Lucene.Net.Util.LuceneVersion.LUCENE_48, analyzer);
@@ -66,28 +99,24 @@ namespace SonicExplorerLib
                 {
                     try
                     {
-                        List<Task> indexingTasks = new List<Task>();
-                        indexingTasks.Add(Task.Run(async () => await IndexDocumentsFolder(writer).ConfigureAwait(false)));
-                        indexingTasks.Add(Task.Run(async () => await IndexDownloadsFolder(writer).ConfigureAwait(false)));
-                        await Task.WhenAll(indexingTasks);
-                        this.IndexingPercentage = 100;
+                        await IndexLocationsFolder(writer, storageFolder);
+                        SettingsContainer.instance.Value.SetValue<bool>("indexingComplete", true);
                     }
                     catch (UnauthorizedAccessException e)
                     {
                         _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                         async () =>
-                            {
-                                await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-broadfilesystemaccess"));
-                            });
+                        {
+                            await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-broadfilesystemaccess"));
+                        });
                     }
                 }
             }
         }
 
-        private async Task IndexDocumentsFolder(IndexWriter writer)
+        private async Task IndexLocationsFolder(IndexWriter writer, StorageFolder storageFolder)
         {
-            StorageFolder Documentsfolder = KnownFolders.DocumentsLibrary;
-            IReadOnlyList<StorageFile> files = await Documentsfolder.GetFilesAsync();
+            IReadOnlyList<StorageFile> files = await storageFolder.GetFilesAsync();
             foreach (StorageFile file in files)
             {
                 var doc = new Document();
@@ -97,7 +126,7 @@ namespace SonicExplorerLib
                 writer.UpdateDocument(t, doc);
             }
             IList<StorageFolder> totalFolders = new List<StorageFolder>();
-            IReadOnlyList<StorageFolder> folders = await Documentsfolder.GetFoldersAsync();
+            IReadOnlyList<StorageFolder> folders = await storageFolder.GetFoldersAsync();
             if (folders == null || folders.Count == 0)
             {
                 writer.Flush(triggerMerge: true, applyAllDeletes: true);
@@ -122,7 +151,6 @@ namespace SonicExplorerLib
                 }
             }
             writer.Flush(triggerMerge: true, applyAllDeletes: true);
-            this.IndexingPercentage = indexingPercent + 25;
         }
 
         private void GetAllFolders(IList<StorageFolder> totalFolders, IReadOnlyList<StorageFolder> folders, int level)
@@ -132,94 +160,31 @@ namespace SonicExplorerLib
             {
                 return;
             }
-            foreach(StorageFolder f in folders)
+            foreach (StorageFolder f in folders)
             {
                 var nestedFolders = f.GetFoldersAsync().GetResults();
                 if (nestedFolders != null && nestedFolders.Count > 0)
                 {
-                    GetAllFolders(totalFolders, nestedFolders, level+1);
-                }
-            }
-        }
-
-        private async Task IndexDownloadsFolder(IndexWriter writer)
-        {
-            StorageFolder downloadsFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Downloads");
-            IReadOnlyList<StorageFile> files = await downloadsFolder.GetFilesAsync();
-            foreach (StorageFile file in files)
-            {
-                var doc = new Document();
-                doc.Add(new Field("name", file.Name.ToLower(), new FieldType { IsIndexed = true, IsStored = true, IndexOptions = IndexOptions.DOCS_ONLY }));
-                doc.Add(new Field("path", file.Path, new FieldType { IsIndexed = false, IsStored = true }));
-                Term t = new Term("name", file.Name.ToLower());
-                writer.UpdateDocument(t, doc);
-            }
-            IList<StorageFolder> totalFolders = new List<StorageFolder>();
-            IReadOnlyList<StorageFolder> folders = await downloadsFolder.GetFoldersAsync();
-            if (folders == null || folders.Count == 0)
-            {
-                writer.Flush(triggerMerge: true, applyAllDeletes: true);
-                return;
-            }
-            GetAllFolders(totalFolders, folders, 0);
-            foreach (StorageFolder folder in totalFolders)
-            {
-                IReadOnlyList<StorageFile> Nestedfiles = await folder.GetFilesAsync();
-                foreach (StorageFile file in Nestedfiles)
-                {
-                    var doc = new Document();
-                    doc.Add(new Field("name", file.Name.ToLower(), new FieldType { IsIndexed = true, IsStored = true, IndexOptions = IndexOptions.DOCS_ONLY }));
-                    doc.Add(new Field("path", file.Path, new FieldType { IsIndexed = false, IsStored = true }));
-                    Term t = new Term("name", file.Name.ToLower());
-                    writer.UpdateDocument(t, doc);
-                }
-                writer.Flush(triggerMerge: true, applyAllDeletes: true);
-            }
-            this.IndexingPercentage = indexingPercent + 25;
-        }
-
-        public async Task IndexDataInBackground()
-        {
-            using (var dir = FSDirectory.Open(indexPath))
-            {
-                var indexWriterConfig = new IndexWriterConfig(Lucene.Net.Util.LuceneVersion.LUCENE_48, analyzer);
-                indexWriterConfig.OpenMode = OpenMode.CREATE_OR_APPEND;
-                using (var writer = new IndexWriter(dir, indexWriterConfig))
-                {
-                    try
-                    {
-                        StorageFolder Documentsfolder = KnownFolders.DocumentsLibrary;
-                        StorageFolder downloadsFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Downloads");
-                        //IReadOnlyList<StorageFile> files =  await Documentsfolder.GetFilesAsync();
-                        IReadOnlyList<StorageFile> files = await downloadsFolder.GetFilesAsync();
-                        foreach (StorageFile file in files)
-                        {
-                            var doc = new Document();
-                            doc.Add(new Field("name", file.Name.ToLower(), new FieldType { IsIndexed = true, IsStored = true, IndexOptions = IndexOptions.DOCS_ONLY }));
-                            doc.Add(new Field("path", file.Path, new FieldType { IsIndexed = false, IsStored = true }));
-                            Term t = new Term("name", file.Name.ToLower());
-                            writer.UpdateDocument(t, doc);
-                        }
-                        writer.Flush(triggerMerge: true, applyAllDeletes: true);
-                    }
-                    catch (UnauthorizedAccessException e)
-                    {
-                        //do nothing.
-                    }
+                    GetAllFolders(totalFolders, nestedFolders, level + 1);
                 }
             }
         }
 
         public void DeleteAllIndexData()
         {
-            using (var dir = FSDirectory.Open(indexPath))
+            foreach (string location in IndexedLocations)
             {
-                var indexWriterConfig = new IndexWriterConfig(Lucene.Net.Util.LuceneVersion.LUCENE_48, analyzer);
-                indexWriterConfig.OpenMode = OpenMode.CREATE_OR_APPEND;
-                using (var writer = new IndexWriter(dir, indexWriterConfig))
+                string basePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+                string indexPath = Path.Combine(basePath, $"hyperXindex-{location}");
+                using (var dir = FSDirectory.Open(indexPath))
                 {
-                    writer.DeleteAll();
-                    writer.Commit();
+                    var indexWriterConfig = new IndexWriterConfig(Lucene.Net.Util.LuceneVersion.LUCENE_48, analyzer);
+                    indexWriterConfig.OpenMode = OpenMode.CREATE_OR_APPEND;
+                    using (var writer = new IndexWriter(dir, indexWriterConfig))
+                    {
+                        writer.DeleteAll();
+                        writer.Commit();
+                    }
                 }
             }
         }
