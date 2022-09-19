@@ -81,10 +81,6 @@ namespace SonicExplorer
 
             //ContentIndexer.GetInstance.DeleteAllIndexData();
             _ = Task.Run(async () => await ContentIndexer.GetInstance.IndexData());
-           /* var search = new LuceneContentSearch();
-            //search.GetFilePaths("boarding pass");
-            search.GetFilePaths("asset");
-            search.GetFilePaths("oxyplot");*/
         }
 
         /// <summary>
