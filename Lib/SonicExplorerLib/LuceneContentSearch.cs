@@ -13,7 +13,7 @@ namespace SonicExplorerLib
 {
     public class LuceneContentSearch
     {
-        private string[] IndexedLocations = { "documents", "downloads" };
+        private string[] IndexedLocations = { "documents", "downloads", "desktop", "pictures", "music", "videos"};
         private List<IndexSearcher> searchers = new List<IndexSearcher>();
  
         public LuceneContentSearch()
@@ -21,24 +21,29 @@ namespace SonicExplorerLib
             // Construct a machine-independent path for the index
             foreach (string location in IndexedLocations)
             {
-                string basePath = Environment.GetFolderPath(
-                   Environment.SpecialFolder.CommonApplicationData);
-                string indexPath = Path.Combine(basePath, $"hyperXindex-{location}");
-                var dir = FSDirectory.Open(indexPath);
-                var reader = DirectoryReader.Open(dir);
-                var searcher = new IndexSearcher(reader);
-                searchers.Add(searcher);
+                try
+                {
+                    string basePath = Environment.GetFolderPath(
+                       Environment.SpecialFolder.CommonApplicationData);
+                    string indexPath = Path.Combine(basePath, $"hyperXindex-{location}");
+                    var dir = FSDirectory.Open(indexPath);
+                    var reader = DirectoryReader.Open(dir);
+                    var searcher = new IndexSearcher(reader);
+                    searchers.Add(searcher);
+                } catch (DirectoryNotFoundException e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
         }
 
-        public async void SearchForFileOrFolder(string keyword)
+        public void SearchForFileOrFolder(string keyword)
         {
             List<Task> searchTasks = new List<Task>();
             foreach (IndexSearcher searcher in searchers)
             {
                 searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword)));
             }
-            await Task.WhenAll(searchTasks).ConfigureAwait(false);
         }
 
         private void GetFilePaths(IndexSearcher searcher, string keyword)

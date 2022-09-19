@@ -28,7 +28,7 @@ namespace SonicExplorerLib
         private int indexingPercent = 0;
         private string userProfile;
         private int nestingLevel = 1;
-        private string[] IndexedLocations = { "documents", "downloads" };
+        private string[] IndexedLocations = { "documents", "downloads", "desktop", "pictures", "music", "videos" };
 
         private ContentIndexer()
         {
@@ -54,21 +54,39 @@ namespace SonicExplorerLib
 
         public async Task IndexData()
         {
-            StorageFolder documentsFolder = KnownFolders.DocumentsLibrary;
-            StorageFolder downloadsFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Downloads");
-            List<Task> indexingTasks = new List<Task>();
-            indexingTasks.Add(Task.Run(async () =>
+            try
             {
-                await IndexDataForLocation(IndexedLocations[0], documentsFolder);
-                this.IndexingPercentage = this.indexingPercent + 25;
-            }));
-            indexingTasks.Add(Task.Run(async () =>
+                StorageFolder documentsFolder = KnownFolders.DocumentsLibrary;
+                StorageFolder downloadsFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Downloads");
+                StorageFolder desktopFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Desktop");
+                List<Task> indexingTasks = new List<Task>();
+                indexingTasks.Add(Task.Run(async () =>
+                {
+                    await IndexDataForLocation(IndexedLocations[0], documentsFolder);
+                    this.IndexingPercentage = this.indexingPercent + 16;
+                }));
+                indexingTasks.Add(Task.Run(async () =>
+                {
+                    await IndexDataForLocation(IndexedLocations[1], downloadsFolder);
+                    this.IndexingPercentage = this.indexingPercent + 16;
+                }));
+                indexingTasks.Add(Task.Run(async () =>
+                {
+                    await IndexDataForLocation(IndexedLocations[2], desktopFolder);
+                    this.IndexingPercentage = this.indexingPercent + 16;
+                }));
+                Task.WaitAll(indexingTasks.ToArray());
+                this.IndexingPercentage = 100;
+                SettingsContainer.instance.Value.SetValue<bool>("indexingComplete", true);
+            }
+            catch (UnauthorizedAccessException e)
             {
-                await IndexDataForLocation(IndexedLocations[1], downloadsFolder);
-                this.IndexingPercentage = this.indexingPercent + 25;
-            }));
-            Task.WaitAll(indexingTasks.ToArray());
-            this.IndexingPercentage = 100;
+                _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                async () =>
+                {
+                    await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-broadfilesystemaccess"));
+                });
+            }
         }
 
         public async Task IndexDataInBackground()
@@ -100,7 +118,6 @@ namespace SonicExplorerLib
                     try
                     {
                         await IndexLocationsFolder(writer, storageFolder);
-                        SettingsContainer.instance.Value.SetValue<bool>("indexingComplete", true);
                     }
                     catch (UnauthorizedAccessException e)
                     {
