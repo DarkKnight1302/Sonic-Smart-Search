@@ -1,4 +1,5 @@
 ﻿using DynamicData;
+using Lucene.Net.Analysis.Core;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
@@ -11,9 +12,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Shapes;
-using static Lucene.Net.Util.Packed.PackedInt32s;
+using static System.Net.WebRequestMethods;
 using Path = System.IO.Path;
 
 namespace SonicExplorerLib
@@ -23,17 +22,16 @@ namespace SonicExplorerLib
         private static Lazy<ContentIndexer> Instance = new Lazy<ContentIndexer>(() => new ContentIndexer());
 
         public static ContentIndexer GetInstance => Instance.Value;
-        private object indexLock = new object();
-        private StandardAnalyzer analyzer;
+        private KeywordAnalyzer analyzer;
         private int indexingPercent = 0;
         private string userProfile;
-        private int nestingLevel = 1;
+        private const int nestingLevel = 1;
         private string[] IndexedLocations = { "documents", "downloads", "desktop", "pictures", "music", "videos" };
 
         private ContentIndexer()
         {
             // Construct a machine-independent path for the index
-            analyzer = new StandardAnalyzer(Lucene.Net.Util.LuceneVersion.LUCENE_48);
+            analyzer = new KeywordAnalyzer();
             userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
@@ -57,6 +55,9 @@ namespace SonicExplorerLib
             try
             {
                 StorageFolder documentsFolder = KnownFolders.DocumentsLibrary;
+                StorageFolder picturesFolder = KnownFolders.PicturesLibrary;
+                StorageFolder musicFolder = KnownFolders.MusicLibrary;
+                StorageFolder videosFolder = KnownFolders.VideosLibrary;
                 StorageFolder downloadsFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Downloads");
                 StorageFolder desktopFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Desktop");
                 List<Task> indexingTasks = new List<Task>();
@@ -75,11 +76,27 @@ namespace SonicExplorerLib
                     await IndexDataForLocation(IndexedLocations[2], desktopFolder);
                     this.IndexingPercentage = this.indexingPercent + 16;
                 }));
+                indexingTasks.Add(Task.Run(async () =>
+                {
+                    await IndexDataForLocation(IndexedLocations[3], picturesFolder);
+                    this.IndexingPercentage = this.indexingPercent + 16;
+                }));
+                indexingTasks.Add(Task.Run(async () =>
+                {
+                    await IndexDataForLocation(IndexedLocations[4], musicFolder);
+                    this.IndexingPercentage = this.indexingPercent + 16;
+                }));
+                indexingTasks.Add(Task.Run(async () =>
+                {
+                    await IndexDataForLocation(IndexedLocations[5], videosFolder);
+                    this.IndexingPercentage = this.indexingPercent + 16;
+                }));
                 Task.WaitAll(indexingTasks.ToArray());
                 this.IndexingPercentage = 100;
                 SettingsContainer.instance.Value.SetValue<bool>("indexingComplete", true);
+                SearchResultService.instance.RefreshSearch();
             }
-            catch (UnauthorizedAccessException e)
+            catch (UnauthorizedAccessException)
             {
                 _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 async () =>
@@ -93,6 +110,7 @@ namespace SonicExplorerLib
         {
             StorageFolder documentsFolder = KnownFolders.DocumentsLibrary;
             StorageFolder downloadsFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Downloads");
+            StorageFolder desktopFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Desktop");
             List<Task> indexingTasks = new List<Task>();
             indexingTasks.Add(Task.Run(async () =>
             {
@@ -102,9 +120,15 @@ namespace SonicExplorerLib
             {
                 await IndexDataForLocation(IndexedLocations[1], downloadsFolder);
             }));
+            indexingTasks.Add(Task.Run(async () =>
+            {
+                await IndexDataForLocation(IndexedLocations[2], desktopFolder);
+                this.IndexingPercentage = this.indexingPercent + 16;
+            }));
+            Task.WaitAll(indexingTasks.ToArray());
         }
 
-        public async Task IndexDataForLocation(string location, StorageFolder storageFolder)
+        private async Task IndexDataForLocation(string location, StorageFolder storageFolder)
         {
             string basePath = Environment.GetFolderPath(
               Environment.SpecialFolder.CommonApplicationData);
@@ -142,16 +166,23 @@ namespace SonicExplorerLib
                 Term t = new Term("name", file.Name.ToLower());
                 writer.UpdateDocument(t, doc);
             }
+            writer.Flush(triggerMerge: true, applyAllDeletes: true);
             IList<StorageFolder> totalFolders = new List<StorageFolder>();
             IReadOnlyList<StorageFolder> folders = await storageFolder.GetFoldersAsync();
             if (folders == null || folders.Count == 0)
             {
-                writer.Flush(triggerMerge: true, applyAllDeletes: true);
                 return;
             }
             GetAllFolders(totalFolders, folders, 0);
             foreach (StorageFolder folder in totalFolders)
             {
+                var folderDoc = new Document();
+                folderDoc.Add(new Field("name", folder.Name.ToLower(), new FieldType { IsIndexed = true, IsStored = true, IndexOptions = IndexOptions.DOCS_ONLY }));
+                folderDoc.Add(new Field("path", folder.Path, new FieldType { IsIndexed = false, IsStored = true }));
+                folderDoc.Add(new Field("folder", "true", new FieldType { IsIndexed = false, IsStored = true }));
+                Term folderTerm = new Term("name", folder.Name.ToLower());
+                writer.UpdateDocument(folderTerm, folderDoc);
+
                 IReadOnlyList<StorageFile> Nestedfiles = await folder.GetFilesAsync();
                 if (Nestedfiles == null || Nestedfiles.Count == 0)
                 {
@@ -166,8 +197,8 @@ namespace SonicExplorerLib
                     Term t = new Term("name", file.Name.ToLower());
                     writer.UpdateDocument(t, doc);
                 }
+                writer.Flush(triggerMerge: true, applyAllDeletes: true);
             }
-            writer.Flush(triggerMerge: true, applyAllDeletes: true);
         }
 
         private void GetAllFolders(IList<StorageFolder> totalFolders, IReadOnlyList<StorageFolder> folders, int level)
@@ -204,6 +235,7 @@ namespace SonicExplorerLib
                     }
                 }
             }
+            SearchResultService.instance.RefreshSearch();
         }
     }
 }
