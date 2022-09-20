@@ -52,7 +52,10 @@ namespace SonicExplorer
 
         private void Page_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            search = new LuceneContentSearch();
+            if (AllowSearch)
+            {
+                search = new LuceneContentSearch();
+            }
         }
     }
 }
