@@ -12,6 +12,8 @@
 
     <Grid>
         <cntrl:Welcome x:Name="welcomePage" x:Load="{x:Bind ShowWelcome, Mode=OneWay}"></cntrl:Welcome>
+        <StackPanel Visibility="{x:Bind AllowSearch, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Top">
+        <Image Source="Views/RocketImage.png" Height="100" Width="100" Margin="0,20,0,0" HorizontalAlignment="Center"/>
         <SearchBox x:Name="mySearchBox"
                             VerticalAlignment="Top"
                             QuerySubmitted="mySearchBox_QuerySubmitted"
@@ -19,9 +21,9 @@
                             FocusOnKeyboardInput="True"
                             SearchHistoryEnabled="False"
                             PlaceholderText="Search for file or folder"
-                            MaxWidth="500"
-                            Visibility="{x:Bind AllowSearch, Mode=OneWay}"
-                            IsEnabled="{x:Bind AllowSearch, Mode=OneWay}" Margin="0,100,0,0"/>
+                            Width="500"
+                            IsEnabled="{x:Bind AllowSearch, Mode=OneWay}" Margin="0,30,0,0"/>
+        </StackPanel>
         <StackPanel x:Name="SearchBox" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{x:Bind AllowSearch, Mode=OneWay}">
             <ListView ItemsSource="{x:Bind SearchResults, Mode=OneWay}"
                       IsItemClickEnabled="True"
