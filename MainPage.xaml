@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SonicExplorer"
+    xmlns:cntrl="using:SonicExplorer.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -10,18 +11,21 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <SearchBox x:Name="mySearchBox"
-                       VerticalAlignment="Top"
-                       QuerySubmitted="mySearchBox_QuerySubmitted"
-                       QueryChanged="mySearchBox_QueryChanged"
-                       FocusOnKeyboardInput="True"
-                       SearchHistoryEnabled="False"
-                       Width="500"
-                       IsEnabled="{x:Bind AllowSearch, Mode=OneWay}" Margin="0,100,0,0"/>
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+        <cntrl:Welcome></cntrl:Welcome>
+        <StackPanel x:Name="SearchBox" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">
+            <SearchBox x:Name="mySearchBox"
+                            VerticalAlignment="Top"
+                            QuerySubmitted="mySearchBox_QuerySubmitted"
+                            QueryChanged="mySearchBox_QueryChanged"
+                            FocusOnKeyboardInput="True"
+                            SearchHistoryEnabled="False"
+                            Width="500"
+                            IsEnabled="{x:Bind AllowSearch, Mode=OneWay}" Margin="0,100,0,0"/>
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
             <ListView ItemsSource="{x:Bind SearchResults, Mode=OneWay}"></ListView>
+            </StackPanel>
+            <ProgressBar VerticalAlignment="Bottom" x:Name="IndexingBar" IsIndeterminate="False" Width="500" Margin="0,0,0,50" >
+            </ProgressBar>
         </StackPanel>
-        <ProgressBar VerticalAlignment="Bottom" x:Name="IndexingBar" IsIndeterminate="False" Width="500" Margin="0,0,0,50" >
-        </ProgressBar>
     </Grid>
 </Page>
