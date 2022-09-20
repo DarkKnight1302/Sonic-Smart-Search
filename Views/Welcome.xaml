@@ -1,0 +1,71 @@
+﻿<UserControl
+    x:Class="SonicExplorer.Views.Welcome"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SonicExplorer.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Grid>
+        <UserControl>
+            <StackPanel Background="AliceBlue">
+                <TextBlock FontSize="40" FontWeight="Bold" HorizontalAlignment="Center" Text="Welcome to HyperX!" Margin="0, 75, 0, 0"/>
+                <Image Source="RocketImage.png" Height="200" Width="200" Margin="0,100,0,100" HorizontalAlignment="Center"/>
+                <Grid Margin="20,10,20,10" HorizontalAlignment="Center" Width="600">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Please wait while we are indexing the following locations..." FontSize="20" Grid.Row="0" Margin="0, 0, 0, 30"/>
+                    <ListBox IsHitTestVisible="False" Background="AliceBlue" HorizontalAlignment="Center" Grid.Row="1">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="IsTabStop" Value="False" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="desktopFolder.png" Height="20" Width="20" Margin="0, 0, 10, 0"/>
+                                <TextBlock>Desktop</TextBlock>
+                            </StackPanel>
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="documentsFolder.jpg" Height="20" Width="20" Margin="0, 0, 10, 0"/>
+                                <TextBlock>Documents</TextBlock>
+                            </StackPanel>
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                            <Image Source="downloadsFolder.png" Height="20" Width="20" Margin="0, 0, 10, 0"/>
+                            <TextBlock>Downloads</TextBlock>
+                        </StackPanel>
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                            <Image Source="musicFolder.png" Height="20" Width="20" Margin="0, 0, 10, 0"/>
+                                <TextBlock>Music</TextBlock>
+                        </StackPanel>
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                            <Image Source="PictureFolder.jpg" Height="20" Width="20" Margin="0, 0, 10, 0"/>
+                            <TextBlock>Picture</TextBlock>
+                        </StackPanel>
+                        </ListBoxItem>
+                        <ListBoxItem>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="videoFolder.png" Height="20" Width="20" Margin="0, 0, 10, 0"/>
+                            <TextBlock>Video</TextBlock>
+                        </StackPanel>
+                        </ListBoxItem>
+                    </ListBox>
+            </Grid>
+                <ProgressBar Minimum="0" Maximum="100" Value="75" Height="20" Foreground="#6264A7" Margin="75, 50, 75, 0" Opacity="100"/>
+            </StackPanel>
+        </UserControl>
+    </Grid>
+</UserControl>
