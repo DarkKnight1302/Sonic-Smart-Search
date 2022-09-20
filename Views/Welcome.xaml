@@ -12,14 +12,14 @@
     <Grid>
         <UserControl>
             <StackPanel Background="AliceBlue">
-                <TextBlock FontSize="40" FontWeight="Bold" HorizontalAlignment="Center" Text="Welcome to HyperX!" Margin="0, 75, 0, 0"/>
+                <TextBlock FontSize="40" FontWeight="Bold" HorizontalAlignment="Center" Text="Welcome to HyperX!" Margin="0, 50, 0, 0"/>
                 <Image Source="RocketImage.png" Height="200" Width="200" Margin="0,100,0,100" HorizontalAlignment="Center"/>
                 <Grid Margin="20,10,20,10" HorizontalAlignment="Center" Width="600">
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <TextBlock Text="Please wait while we are indexing the following locations..." FontSize="20" Grid.Row="0" Margin="0, 0, 0, 30"/>
+                    <TextBlock Text="Please wait while we are indexing the following locations..." FontSize="20" Grid.Row="0" Margin="0, 0, 0, 20"/>
                     <ListBox IsHitTestVisible="False" Background="AliceBlue" HorizontalAlignment="Center" Grid.Row="1">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
@@ -64,7 +64,7 @@
                         </ListBoxItem>
                     </ListBox>
             </Grid>
-                <ProgressBar x:Name="IndexProgress" Minimum="0" Maximum="100" Value="75" Height="20" Foreground="#6264A7" Margin="75, 50, 75, 0" Opacity="100"/>
+                <ProgressBar x:Name="IndexProgress" Minimum="0" Maximum="100" Value="75" Height="20" Foreground="#6264A7" Margin="75, 25, 75, 0" Opacity="100"/>
             </StackPanel>
         </UserControl>
     </Grid>
