@@ -23,10 +23,6 @@ namespace SonicExplorer
         public MainPage()
         {
             this.InitializeComponent();
-            ContentIndexer.GetInstance.IndexingPercentageObservable.Subscribe(value =>
-            {
-                this.IndexingBar.Value = value;
-            });
             SearchResultService.instance.refreshSearch += ((sender, args) =>
             {
                 search = new LuceneContentSearch();
@@ -39,6 +35,8 @@ namespace SonicExplorer
         }
 
         public bool AllowSearch => SettingsContainer.instance.Value.GetValue<bool>("indexingComplete") == true;
+
+        public bool ShowWelcome => SettingsContainer.instance.Value.GetValue<bool>("indexingComplete") != true;
 
         public ObservableCollection<string> SearchResults => SearchResultService.instance.SearchResults;
 

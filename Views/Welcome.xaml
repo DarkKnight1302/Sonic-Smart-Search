@@ -64,7 +64,7 @@
                         </ListBoxItem>
                     </ListBox>
             </Grid>
-                <ProgressBar Minimum="0" Maximum="100" Value="75" Height="20" Foreground="#6264A7" Margin="75, 50, 75, 0" Opacity="100"/>
+                <ProgressBar x:Name="IndexProgress" Minimum="0" Maximum="100" Value="75" Height="20" Foreground="#6264A7" Margin="75, 50, 75, 0" Opacity="100"/>
             </StackPanel>
         </UserControl>
     </Grid>

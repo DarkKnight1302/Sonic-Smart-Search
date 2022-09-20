@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SonicExplorerLib;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,6 +23,10 @@ namespace SonicExplorer.Views
         public Welcome()
         {
             this.InitializeComponent();
+            ContentIndexer.GetInstance.IndexingPercentageObservable.Subscribe(value =>
+            {
+                this.IndexProgress.Value = value;
+            });
         }
     }
 }

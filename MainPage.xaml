@@ -11,7 +11,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <cntrl:Welcome></cntrl:Welcome>
+        <cntrl:Welcome x:Name="welcomePage" x:Load="{x:Bind ShowWelcome, Mode=OneWay}"></cntrl:Welcome>
         <StackPanel x:Name="SearchBox" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">
             <SearchBox x:Name="mySearchBox"
                             VerticalAlignment="Top"
