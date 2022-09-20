@@ -42,7 +42,7 @@ namespace SonicExplorerLib
         public void SearchForFileOrFolder(string keyword)
         {
             SearchResultService.instance.ClearList();
-            if (string.IsNullOrEmpty(keyword))
+            if (string.IsNullOrEmpty(keyword) || keyword.Length < 2)
             {
                 return;
             }
@@ -91,6 +91,10 @@ namespace SonicExplorerLib
                 string[] splitwords = keyword.Split(' ');
                 foreach (string split in splitwords)
                 {
+                    if (split.Length < 2)
+                    {
+                        continue;
+                    }
                     if (GetFilePaths(searcher, split, cancellationToken, source))
                     {
                         return true;
