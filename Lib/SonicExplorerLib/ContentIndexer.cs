@@ -109,6 +109,9 @@ namespace SonicExplorerLib
         public async Task IndexDataInBackground()
         {
             StorageFolder documentsFolder = KnownFolders.DocumentsLibrary;
+            StorageFolder picturesFolder = KnownFolders.PicturesLibrary;
+            StorageFolder musicFolder = KnownFolders.MusicLibrary;
+            StorageFolder videosFolder = KnownFolders.VideosLibrary;
             StorageFolder downloadsFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Downloads");
             StorageFolder desktopFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Desktop");
             List<Task> indexingTasks = new List<Task>();
@@ -123,9 +126,21 @@ namespace SonicExplorerLib
             indexingTasks.Add(Task.Run(async () =>
             {
                 await IndexDataForLocation(IndexedLocations[2], desktopFolder);
-                this.IndexingPercentage = this.indexingPercent + 16;
+            }));
+            indexingTasks.Add(Task.Run(async () =>
+            {
+                await IndexDataForLocation(IndexedLocations[3], picturesFolder);
+            }));
+            indexingTasks.Add(Task.Run(async () =>
+            {
+                await IndexDataForLocation(IndexedLocations[4], musicFolder);
+            }));
+            indexingTasks.Add(Task.Run(async () =>
+            {
+                await IndexDataForLocation(IndexedLocations[5], videosFolder);
             }));
             Task.WaitAll(indexingTasks.ToArray());
+            SettingsContainer.instance.Value.SetValue<bool>("indexingComplete", true);
         }
 
         private async Task IndexDataForLocation(string location, StorageFolder storageFolder)
@@ -188,7 +203,6 @@ namespace SonicExplorerLib
                 {
                     continue;
                 }
-
                 foreach (StorageFile file in Nestedfiles)
                 {
                     var doc = new Document();

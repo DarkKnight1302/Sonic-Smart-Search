@@ -12,20 +12,23 @@
 
     <Grid>
         <cntrl:Welcome x:Name="welcomePage" x:Load="{x:Bind ShowWelcome, Mode=OneWay}"></cntrl:Welcome>
-        <StackPanel x:Name="SearchBox" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">
-            <SearchBox x:Name="mySearchBox"
+        <StackPanel Visibility="{x:Bind AllowSearch, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Top">
+        <Image Source="Views/RocketImage.png" Height="100" Width="100" Margin="0,20,0,0" HorizontalAlignment="Center"/>
+        <SearchBox x:Name="mySearchBox"
                             VerticalAlignment="Top"
                             QuerySubmitted="mySearchBox_QuerySubmitted"
                             QueryChanged="mySearchBox_QueryChanged"
                             FocusOnKeyboardInput="True"
                             SearchHistoryEnabled="False"
+                            PlaceholderText="Search for file or folder"
                             Width="500"
-                            IsEnabled="{x:Bind AllowSearch, Mode=OneWay}" Margin="0,100,0,0"/>
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-            <ListView ItemsSource="{x:Bind SearchResults, Mode=OneWay}"></ListView>
-            </StackPanel>
-            <ProgressBar VerticalAlignment="Bottom" x:Name="IndexingBar" IsIndeterminate="False" Width="500" Margin="0,0,0,50" >
-            </ProgressBar>
+                            IsEnabled="{x:Bind AllowSearch, Mode=OneWay}" Margin="0,30,0,0"/>
+        </StackPanel>
+        <StackPanel x:Name="SearchBox" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{x:Bind AllowSearch, Mode=OneWay}">
+            <ListView ItemsSource="{x:Bind SearchResults, Mode=OneWay}"
+                      IsItemClickEnabled="True"
+                      MaxWidth="1000"
+                      ItemClick="ListView_ItemClick"></ListView>
         </StackPanel>
     </Grid>
 </Page>
