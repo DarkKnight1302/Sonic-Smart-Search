@@ -48,6 +48,7 @@ namespace SonicExplorerLib
             }
             List<Task> searchTasks = new List<Task>();
             CancellationTokenSource source = new CancellationTokenSource();
+            keyword = keyword.Trim();
             foreach (IndexSearcher searcher in searchers)
             {
                 searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source)));
@@ -63,6 +64,7 @@ namespace SonicExplorerLib
             }
             List<Task> searchTasks = new List<Task>();
             CancellationTokenSource source = new CancellationTokenSource();
+            keyword = keyword.Trim();
             foreach (IndexSearcher searcher in searchers)
             {
                 searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source)));

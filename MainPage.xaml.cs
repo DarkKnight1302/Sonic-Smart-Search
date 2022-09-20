@@ -43,7 +43,7 @@ namespace SonicExplorer
 
         private void mySearchBox_QueryChanged(SearchBox sender, SearchBoxQueryChangedEventArgs args)
         {
-            search.SearchRealtimeForFileOrFolder(args.QueryText.ToLower());
+           // search.SearchRealtimeForFileOrFolder(args.QueryText.ToLower());
         }
     }
 }
