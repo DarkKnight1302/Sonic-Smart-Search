@@ -12,8 +12,10 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
 using Windows.System;
 using Windows.UI.Core;
+using Windows.UI.Shell;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -48,7 +50,6 @@ namespace SonicExplorer
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
             TimerTaskImpl.Instance.Register();
-            Debug.WriteLine($"Value of count : {TimerTaskImpl.Instance.GetCount}");
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -95,13 +96,24 @@ namespace SonicExplorer
                     SecondaryButtonCommand = new DelegateCommand(async () => await ApplicationView.GetForCurrentView().TryConsolidateAsync()),
                     PrimaryButtonCommand = new DelegateCommand(async () => await Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-broadfilesystemaccess"))),
                     DefaultButton = ContentDialogButton.Primary,
-                    Title = "Allow File System Access to \n               HyperX",
+                    Title = "Allow File System Access to 'HyperX'",
+                    Content = "HyperX needs to be relaunched post access grant.",
                 };
                 await contentDialog.ShowAsync();
                 SettingsContainer.instance.Value.SetValue("accessGiven", true);
             }
             if (SettingsContainer.instance.Value.GetValue<bool>("indexingComplete") != true)
             {
+                if (ApiInformation.IsTypePresent("Windows.UI.Shell.TaskbarManager"))
+                {
+                    bool isPinningAllowed = TaskbarManager.GetDefault().IsPinningAllowed;
+                    bool isPinned = await TaskbarManager.GetDefault().IsCurrentAppPinnedAsync();
+                    if (!isPinned)
+                    {
+                        await TaskbarManager.GetDefault().RequestPinCurrentAppAsync();
+                    }
+
+                }
                 _ = Task.Run(async () => await ContentIndexer.GetInstance.IndexData());
             }
         }

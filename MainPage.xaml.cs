@@ -4,6 +4,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Windows.ApplicationModel.Core;
+using Windows.Storage;
+using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 
@@ -57,6 +59,13 @@ namespace SonicExplorer
             {
                 search = new LuceneContentSearch();
             }
+        }
+
+        private async void ListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            string path = e.ClickedItem as string;
+            StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+            await Launcher.LaunchFileAsync(file);
         }
     }
 }
