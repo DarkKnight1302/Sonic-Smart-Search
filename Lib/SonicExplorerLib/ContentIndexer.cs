@@ -58,8 +58,23 @@ namespace SonicExplorerLib
                 StorageFolder picturesFolder = KnownFolders.PicturesLibrary;
                 StorageFolder musicFolder = KnownFolders.MusicLibrary;
                 StorageFolder videosFolder = KnownFolders.VideosLibrary;
+                StorageFolder desktopFolder;
                 StorageFolder downloadsFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Downloads");
-                StorageFolder desktopFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Desktop");
+                try
+                {
+                    desktopFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Desktop");
+                }
+                catch (Exception)
+                {
+                    try
+                    {
+                        desktopFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\OneDrive\\Desktop");
+                    }
+                    catch (Exception)
+                    {
+                        desktopFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\OneDrive - Microsoft\\Desktop");
+                    }
+                }
                 List<Task> indexingTasks = new List<Task>();
                 indexingTasks.Add(Task.Run(async () =>
                 {
@@ -113,7 +128,22 @@ namespace SonicExplorerLib
             StorageFolder musicFolder = KnownFolders.MusicLibrary;
             StorageFolder videosFolder = KnownFolders.VideosLibrary;
             StorageFolder downloadsFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Downloads");
-            StorageFolder desktopFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Desktop");
+            StorageFolder desktopFolder;
+            try
+            {
+                desktopFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Desktop");
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    desktopFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\OneDrive\\Desktop");
+                }
+                catch (Exception)
+                {
+                    desktopFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\OneDrive - Microsoft\\Desktop");
+                }
+            }
             List<Task> indexingTasks = new List<Task>();
             indexingTasks.Add(Task.Run(async () =>
             {
