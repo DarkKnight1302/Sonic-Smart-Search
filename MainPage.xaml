@@ -11,9 +11,20 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <cntrl:Welcome x:Name="welcomePage" x:Load="{x:Bind ShowWelcome, Mode=OneWay}"></cntrl:Welcome>
-        <StackPanel Visibility="{x:Bind AllowSearch, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Top">
-        <Image Source="Views/RocketImage.png" Height="100" Width="100" Margin="0,20,0,0" HorizontalAlignment="Center"/>
+        <Grid.Resources>
+            <Style x:Key="TransitionTheme" TargetType="UserControl">
+                <Setter Property="Transitions">
+                    <Setter.Value>
+                        <TransitionCollection>
+                            <PopupThemeTransition/>
+                        </TransitionCollection>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Grid.Resources>
+        <cntrl:Welcome x:Name="welcomePage" x:Load="{x:Bind ShowWelcome, Mode=OneWay}" Style="{StaticResource TransitionTheme}"></cntrl:Welcome>
+        <StackPanel Background="Transparent" Visibility="{x:Bind AllowSearch, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Top">
+        <Image Source="Views/RocketImage.png" Height="50" Width="50" Margin="0,20,0,0" HorizontalAlignment="Center"/>
         <SearchBox x:Name="mySearchBox"
                             VerticalAlignment="Top"
                             QuerySubmitted="mySearchBox_QuerySubmitted"
@@ -24,11 +35,12 @@
                             Width="500"
                             IsEnabled="{x:Bind AllowSearch, Mode=OneWay}" Margin="0,30,0,0"/>
         </StackPanel>
-        <StackPanel x:Name="SearchBox" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{x:Bind AllowSearch, Mode=OneWay}">
+        <StackPanel Background="Transparent" x:Name="SearchBox" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{x:Bind AllowSearch, Mode=OneWay}">
             <ListView ItemsSource="{x:Bind SearchResults, Mode=OneWay}"
                       IsItemClickEnabled="True"
                       MaxWidth="1000"
-                      ItemClick="ListView_ItemClick"></ListView>
+                      ItemClick="ListView_ItemClick">
+            </ListView>
         </StackPanel>
     </Grid>
 </Page>
