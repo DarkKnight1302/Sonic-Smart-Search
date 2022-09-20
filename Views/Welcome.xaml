@@ -11,60 +11,52 @@
 
     <Grid>
         <UserControl>
-            <StackPanel Background="AliceBlue">
-                <TextBlock FontSize="40" FontWeight="Bold" HorizontalAlignment="Center" Text="Welcome to HyperX!" Margin="0, 50, 0, 0"/>
+            <StackPanel Background="AliceBlue" Margin="-166,0,-216,-473">
+                <TextBlock FontSize="40" FontWeight="Bold" HorizontalAlignment="Center" Text="Welcome to HyperX!" Margin="0, 100, 0, 0"/>
                 <Image Source="RocketImage.png" Height="200" Width="200" Margin="0,100,0,100" HorizontalAlignment="Center"/>
-                <Grid Margin="20,10,20,10" HorizontalAlignment="Center" Width="600">
+                <Grid Margin="20,10,20,10" HorizontalAlignment="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <TextBlock Text="Please wait while we are indexing the following locations..." FontSize="20" Grid.Row="0" Margin="0, 0, 0, 20"/>
-                    <ListBox IsHitTestVisible="False" Background="AliceBlue" HorizontalAlignment="Center" Grid.Row="1">
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="IsTabStop" Value="False" />
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                        <ListBoxItem>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="desktopFolder.png" Height="20" Width="20" Margin="0, 0, 10, 0"/>
-                                <TextBlock>Desktop</TextBlock>
+                    <Grid Grid.Row="1" HorizontalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="0, 0, 20, 10">
+                                <Image Source="desktopFolder.png" Height="30" Width="30" Margin="0, 0, 10, 0"/>
+                                <TextBlock VerticalAlignment="Center">Desktop</TextBlock>
                             </StackPanel>
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="documentsFolder.jpg" Height="20" Width="20" Margin="0, 0, 10, 0"/>
-                                <TextBlock>Documents</TextBlock>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Margin="0, 0, 20, 0">
+                                <Image Source="documentsFolder.jpg" Height="30" Width="30" Margin="0, 0, 10, 0"/>
+                                <TextBlock VerticalAlignment="Center">Documents</TextBlock>
                             </StackPanel>
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            <StackPanel Orientation="Horizontal">
-                            <Image Source="downloadsFolder.png" Height="20" Width="20" Margin="0, 0, 10, 0"/>
-                            <TextBlock>Downloads</TextBlock>
+                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Margin="0, 0, 20, 10">
+                                <Image Source="downloadsFolder.png" Height="30" Width="30" Margin="0, 0, 10, 0"/>
+                                <TextBlock VerticalAlignment="Center">Downloads</TextBlock>
+                            </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Margin="0. 0, 20, 0">
+                            <Image Source="musicFolder.png" Height="30" Width="30" Margin="0, 0, 10, 0"/>
+                            <TextBlock VerticalAlignment="Center">Music</TextBlock>
                         </StackPanel>
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            <StackPanel Orientation="Horizontal">
-                            <Image Source="musicFolder.png" Height="20" Width="20" Margin="0, 0, 10, 0"/>
-                                <TextBlock>Music</TextBlock>
-                        </StackPanel>
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            <StackPanel Orientation="Horizontal">
-                            <Image Source="PictureFolder.jpg" Height="20" Width="20" Margin="0, 0, 10, 0"/>
-                            <TextBlock>Picture</TextBlock>
-                        </StackPanel>
-                        </ListBoxItem>
-                        <ListBoxItem>
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="videoFolder.png" Height="20" Width="20" Margin="0, 0, 10, 0"/>
-                            <TextBlock>Video</TextBlock>
-                        </StackPanel>
-                        </ListBoxItem>
-                    </ListBox>
-            </Grid>
-                <ProgressBar x:Name="IndexProgress" Minimum="0" Maximum="100" Value="75" Height="20" Foreground="#6264A7" Margin="75, 25, 75, 0" Opacity="100"/>
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" Margin="0, 0, 0, 10">
+                                <Image Source="PictureFolder.jpg" Height="30" Width="30" Margin="0, 0, 10, 0"/>
+                                <TextBlock VerticalAlignment="Center">Picture</TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2">
+                                <Image Source="videoFolder.png" Height="30" Width="30" Margin="0, 0, 10, 0"/>
+                                <TextBlock VerticalAlignment="Center">Video</TextBlock>
+                            </StackPanel>
+                    </Grid>
+                </Grid>
+                <ProgressBar x:Name="IndexProgress" Minimum="0" Maximum="100" Height="20" Foreground="#6264A7" Width="700" Opacity="100" HorizontalAlignment="Center" Margin="50, 50, 50, 50"/>
             </StackPanel>
         </UserControl>
     </Grid>
