@@ -42,13 +42,13 @@ namespace SonicExplorerLib
         public void SearchForFileOrFolder(string keyword)
         {
             SearchResultService.instance.ClearList();
-            if (string.IsNullOrEmpty(keyword) || keyword.Length < 2)
+            keyword = keyword?.Trim();
+            if (string.IsNullOrEmpty(keyword) || keyword.Length < 2 || string.IsNullOrWhiteSpace(keyword))
             {
                 return;
             }
             List<Task> searchTasks = new List<Task>();
             CancellationTokenSource source = new CancellationTokenSource();
-            keyword = keyword.Trim();
             foreach (IndexSearcher searcher in searchers)
             {
                 searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source)));
@@ -58,13 +58,13 @@ namespace SonicExplorerLib
         public void SearchRealtimeForFileOrFolder(string keyword)
         {
             SearchResultService.instance.ClearList();
-            if (string.IsNullOrEmpty(keyword) || keyword.Length < 3)
+            keyword = keyword?.Trim();
+            if (string.IsNullOrEmpty(keyword) || keyword.Length < 3 || string.IsNullOrWhiteSpace(keyword))
             {
                 return;
             }
             List<Task> searchTasks = new List<Task>();
             CancellationTokenSource source = new CancellationTokenSource();
-            keyword = keyword.Trim();
             foreach (IndexSearcher searcher in searchers)
             {
                 searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source)));

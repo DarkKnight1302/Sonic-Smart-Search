@@ -30,6 +30,7 @@ namespace SonicExplorer
                     () =>
                     {
                         this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AllowSearch)));
+                        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ShowWelcome)));
                     });
             });
         }

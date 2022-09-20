@@ -12,20 +12,17 @@
 
     <Grid>
         <cntrl:Welcome x:Name="welcomePage" x:Load="{x:Bind ShowWelcome, Mode=OneWay}"></cntrl:Welcome>
-        <StackPanel x:Name="SearchBox" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">
-            <SearchBox x:Name="mySearchBox"
+        <SearchBox x:Name="mySearchBox"
                             VerticalAlignment="Top"
                             QuerySubmitted="mySearchBox_QuerySubmitted"
                             QueryChanged="mySearchBox_QueryChanged"
                             FocusOnKeyboardInput="True"
                             SearchHistoryEnabled="False"
                             Width="500"
+                            Visibility="{x:Bind AllowSearch, Mode=OneWay}"
                             IsEnabled="{x:Bind AllowSearch, Mode=OneWay}" Margin="0,100,0,0"/>
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel x:Name="SearchBox" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{x:Bind AllowSearch, Mode=OneWay}">
             <ListView ItemsSource="{x:Bind SearchResults, Mode=OneWay}"></ListView>
-            </StackPanel>
-            <ProgressBar VerticalAlignment="Bottom" x:Name="IndexingBar" IsIndeterminate="False" Width="500" Margin="0,0,0,50" >
-            </ProgressBar>
         </StackPanel>
     </Grid>
 </Page>
