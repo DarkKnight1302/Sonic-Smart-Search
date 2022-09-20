@@ -1,0 +1,526 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+    <!--==============-->
+    <!-- Fluent Icons -->
+    <!--==============-->
+
+    <Style x:Key="FluentBase" TargetType="FontIcon">
+        <Setter Property="FontFamily" Value="/Assets/SurfaceAppFluent.ttf#Surface App Fluent Icons" />
+    </Style>
+
+    <!-- This represents no Icon-->
+    <Style x:Key="Fluent_Null" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}" />
+
+    <!-- Use this icon to represent icons we don't have in our TTF. -->
+    <Style x:Key="Fluent_UnderConstruction" TargetType="FontIcon">
+        <Setter Property="Glyph" Value="&#xE822;" />
+    </Style>
+
+    <Style x:Key="Fluent_AddTo" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xECC8;" />
+    </Style>
+
+    <Style x:Key="Fluent_BookPlay" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE348;" />
+    </Style>
+
+    <Style x:Key="Fluent_CalligraphyPen" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEDFB;" />
+    </Style>
+
+    <Style x:Key="Fluent_Camera" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE722;" />
+    </Style>
+
+    <Style x:Key="Fluent_ChatBubblesQuestion" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE349;" />
+    </Style>
+
+    <Style x:Key="Fluent_ChatBubblesQuestionMirrored" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE34A;" />
+    </Style>
+
+    <Style x:Key="Fluent_ChevronDown" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE70D;" />
+    </Style>
+
+    <Style x:Key="Fluent_ChevronUp" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE70E;" />
+    </Style>
+
+    <Style x:Key="Fluent_ChevronLeft" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE76B;" />
+    </Style>
+
+    <Style x:Key="Fluent_ChevronRight" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE76C;" />
+    </Style>
+
+    <Style x:Key="Fluent_Copy" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE8C8;" />
+    </Style>
+
+    <Style x:Key="Fluent_Delete" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE74D;" />
+    </Style>
+
+    <Style x:Key="Fluent_DataCollectionLibrary" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEEB7;" />
+    </Style>
+
+    <Style x:Key="Fluent_Dictionary" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE82D;" />
+    </Style>
+
+    <Style x:Key="Fluent_Edit" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE70F;" />
+    </Style>
+
+    <Style x:Key="Fluent_Equalizer" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE9E9;" />
+    </Style>
+
+    <Style x:Key="Fluent_EyeGaze" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xF19D;" />
+    </Style>
+
+    <Style x:Key="Fluent_Giftbox" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEC1F;" />
+    </Style>
+
+    <Style x:Key="Fluent_GlobalNavButton" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE700;" />
+    </Style>
+
+    <Style x:Key="Fluent_Globe" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE774;" />
+    </Style>
+
+    <Style x:Key="Fluent_HeadphonesSoundWave" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE340;" />
+    </Style>
+
+    <Style x:Key="Fluent_Info" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE946;" />
+    </Style>
+
+    <Style x:Key="Fluent_AsteriskBadge12" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEDAD;" />
+    </Style>
+
+    <Style x:Key="Fluent_List" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEA37;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBattery0" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBA0;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBattery1" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBA1;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBattery2" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBA2;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBattery3" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBA3;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBattery4" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBA4;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBattery5" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBA5;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBattery6" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBA6;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBattery7" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBA7;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBattery8" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBA8;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBattery9" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBA9;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBattery10" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBAA;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryCharging0" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBAB;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryCharging1" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBAC;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryCharging2" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBAD;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryCharging3" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBAE;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryCharging4" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBAF;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryCharging5" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBB0;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryCharging6" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBB1;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryCharging7" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBB2;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryCharging8" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBB3;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryCharging9" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBB4;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryCharging10" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBB5;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryError0" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE408;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryError1" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE409;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryError2" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE40A;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryError3" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE40B;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryError4" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE40C;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryError5" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE40D;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryError6" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE40E;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryError7" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE40F;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryError8" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE410;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryError9" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE411;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryError10" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE412;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatterySaver0" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBB6;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatterySaver1" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBB7;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatterySaver2" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBB8;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatterySaver3" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBB9;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatterySaver4" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBBA;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatterySaver5" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBBB;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatterySaver6" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBBC;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatterySaver7" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBBD;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatterySaver8" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBBE;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatterySaver9" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBBF;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatterySaver10" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBC0;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryWarning0" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE413;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryWarning1" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE414;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryWarning2" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE415;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryWarning3" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE416;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryWarning4" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE417;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryWarning5" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE418;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryWarning6" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE419;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryWarning7" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE41A;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryWarning8" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE41B;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryWarning9" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE41C;" />
+    </Style>
+
+    <Style x:Key="Fluent_MobBatteryWarning10" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE41D;" />
+    </Style>
+
+    <Style x:Key="Fluent_MSNVideos" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEB1C;" />
+    </Style>
+
+    <Style x:Key="Fluent_OpenInNewWindow" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE8A7;" />
+    </Style>
+
+    <Style x:Key="Fluent_WinLogo" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE782;" />
+    </Style>
+
+    <Style x:Key="Fluent_Settings" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE713;" />
+    </Style>
+
+    <Style x:Key="Fluent_Shield" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEA18;" />
+    </Style>
+
+    <Style x:Key="Fluent_SpecialEffectSpeed" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xF4A7;" />
+    </Style>
+
+    <Style x:Key="Fluent_SurfaceApp" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE336;" />
+    </Style>
+
+    <Style x:Key="Fluent_Volume0" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE992;" />
+    </Style>
+
+    <Style x:Key="Fluent_NoiseSuppression" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE65B;" />
+    </Style>
+
+    <Style x:Key="Fluent_BackgroundBlur" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE425;" />
+    </Style>
+
+    <Style x:Key="Fluent_Webcam" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE8B8;" />
+    </Style>
+
+    <Style x:Key="Fluent_Play" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE768;" />
+    </Style>
+
+    <Style x:Key="Fluent_Replay" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEF3B;" />
+    </Style>
+
+    <Style x:Key="Fluent_Volume1" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE993;" />
+    </Style>
+
+    <Style x:Key="Fluent_Volume2" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE994;" />
+    </Style>
+
+    <Style x:Key="Fluent_Volume3" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE995;" />
+    </Style>
+
+    <Style x:Key="Fluent_WiredUSB" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xECF0;" />
+    </Style>
+
+    <Style x:Key="Fluent_WirelessUSB" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xECF1;" />
+    </Style>
+
+    <Style x:Key="Fluent_WirelessDisplayAdapter" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE407;" />
+    </Style>
+
+    <Style x:Key="Fluent_Cancel" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE711;" />
+    </Style>
+
+    <Style x:Key="Fluent_Home" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE80F;" />
+    </Style>
+
+    <Style x:Key="Fluent_CheckMark" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE73E;" />
+    </Style>
+
+    <Style x:Key="Fluent_EraseTool" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE75C;" />
+    </Style>
+
+    <Style x:Key="Fluent_Lock" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE72E;" />
+    </Style>
+
+    <Style x:Key="Fluent_eSIM" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xF61B;" />
+    </Style>
+
+    <Style x:Key="Fluent_Mouse" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE962;" />
+    </Style>
+
+    <Style x:Key="Fluent_KeyboardStandard" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE765;" />
+    </Style>
+
+    <Style x:Key="Fluent_Add" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE710;" />
+    </Style>
+
+    <Style x:Key="Fluent_BatteryHealth" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE66E;" />
+    </Style>
+    <Style x:Key="Fluent_TVMonitor" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE7F4;" />
+    </Style>
+    <Style x:Key="Fluent_Personalize" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE771;" />
+    </Style>
+    <Style x:Key="Fluent_Emoji" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE76E;" />
+    </Style>
+
+    <Style x:Key="Fluent_Reset" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE423;" />
+    </Style>
+
+    <Style x:Key="Fluent_ExpressiveInput" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xF6B8;" />
+    </Style>
+
+    <Style x:Key="Fluent_KeyboardClassic" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE765;" />
+    </Style>
+
+    <Style x:Key="Fluent_MapPin" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE707;" />
+    </Style>
+
+    <Style x:Key="Fluent_MapPinOff" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xF6A4;" />
+    </Style>
+
+    <Style x:Key="Fluent_SnippingTool" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xF7ED;" />
+    </Style>
+
+    <Style x:Key="Fluent_PrintScreenKey" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xF407;" />
+    </Style>
+
+    <Style x:Key="Fluent_Screenshot" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEBED;" />
+    </Style>
+
+    <Style x:Key="Fluent_Warning" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE7BA;" />
+    </Style>
+
+    <Style x:Key="Fluent_CompletedSolid" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xEC61;" />
+    </Style>
+
+    <Style x:Key="Fluent_RepeatAll" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE8EE;" />
+    </Style>
+
+    <Style x:Key="Fluent_Paste" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE77F;" />
+    </Style>
+
+    <Style x:Key="Fluent_PasteAsText" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xF5D5;" />
+    </Style>
+
+    <Style x:Key="Fluent_Frown" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE757;" />
+    </Style>
+
+    <Style x:Key="Fluent_Insights" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE3AF;" />
+    </Style>
+
+    <Style x:Key="Fluent_Feedback" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xED15;" />
+    </Style>
+</ResourceDictionary>
