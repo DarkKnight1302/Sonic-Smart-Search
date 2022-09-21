@@ -112,9 +112,8 @@ namespace SonicExplorer
                     {
                         await TaskbarManager.GetDefault().RequestPinCurrentAppAsync();
                     }
-
+                    _ = Task.Run(async () => await ContentIndexer.GetInstance.IndexData());
                 }
-                _ = Task.Run(async () => await ContentIndexer.GetInstance.IndexData());
             }
         }
 
