@@ -1,6 +1,7 @@
 ﻿
 using DynamicData;
 using Lucene.Net.Analysis.Payloads;
+using SonicExplorerLib.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,7 +22,7 @@ namespace SonicExplorerLib
 
         private volatile int topRank = int.MaxValue;
 
-        public ObservableCollection<string> SearchResults { get; private set; }
+        public ObservableCollection<SearchResultItem> SearchResults { get; private set; }
 
         public static SearchResultService instance => lazyInstance.Value;
 
@@ -29,7 +30,7 @@ namespace SonicExplorerLib
 
         private SearchResultService()
         {
-            SearchResults = new ObservableCollection<string>();
+            SearchResults = new ObservableCollection<SearchResultItem>();
             this.Dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         }
 
@@ -38,7 +39,7 @@ namespace SonicExplorerLib
             this.refreshSearch?.Invoke(this, null);
         }
 
-        public async void AddItem(List<string> paths, int rank)
+        public async void AddItem(List<SearchResult> paths, int rank)
         {
             if (rank > topRank)
             {
@@ -52,7 +53,7 @@ namespace SonicExplorerLib
                     {
                         if (SearchResults.Count < 10)
                         {
-                            SearchResults.AddRange(paths);
+                            paths.ForEach(x => SearchResults.Add(new SearchResultItem(x)));
                         }
                     });
             } finally

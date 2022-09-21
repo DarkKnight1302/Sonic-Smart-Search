@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Threading;
+using SonicExplorerLib.Models;
 
 namespace SonicExplorerLib
 {
@@ -73,7 +74,7 @@ namespace SonicExplorerLib
         {
             TermQuery termQuery = new TermQuery(new Term("name", keyword));
             TopDocs docs = searcher.Search(termQuery, 3);
-            List<string> paths = new List<string>();
+            List<SearchResult> paths = new List<SearchResult>();
             if (docs.TotalHits == 0 && keyword.Any(x => Char.IsWhiteSpace(x)) && !cancellationToken.IsCancellationRequested)
             {
                 string[] splitwords = keyword.Split(' ');
@@ -119,12 +120,12 @@ namespace SonicExplorerLib
             foreach (ScoreDoc hit in docs.ScoreDocs)
             {
                 var foundDoc = searcher.Doc(hit.Doc);
-                paths.Add(foundDoc.Get("path"));
-                Debug.WriteLine($"Path found {foundDoc.Get("path")}");
-                if (foundDoc.Get("folder") != null)
+                paths.Add(new SearchResult
                 {
-                    Debug.WriteLine($"Found folder with name {foundDoc.Get("name")}");
-                }
+                    fileName = foundDoc.Get("name"),
+                    path = foundDoc.Get("path"),
+                    isFolder = foundDoc.Get("folder") != null
+                });
             }
             SearchResultService.instance.AddItem(paths, rank);
             return true;

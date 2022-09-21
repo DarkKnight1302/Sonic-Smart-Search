@@ -1,5 +1,7 @@
 ﻿using DynamicData.Binding;
+using SonicExplorer.Views;
 using SonicExplorerLib;
+using SonicExplorerLib.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -42,10 +44,8 @@ namespace SonicExplorer
 
         public bool ShowWelcome => SettingsContainer.instance.Value.GetValue<bool>("indexingComplete") != true;
 
-        public ObservableCollection<string> SearchResults => SearchResultService.instance.SearchResults;
-        public ObservableCollection<ListItemContext> SearchResultsList => new ObservableCollection<ListItemContext>();
+        public ObservableCollection<SearchResultItem> SearchResults => SearchResultService.instance.SearchResults;
         
-
         private void mySearchBox_QuerySubmitted(SearchBox sender, SearchBoxQuerySubmittedEventArgs args)
         {
             search?.SearchForFileOrFolder(args.QueryText.ToLower());

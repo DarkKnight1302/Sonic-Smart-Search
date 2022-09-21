@@ -523,4 +523,8 @@
     <Style x:Key="Fluent_Feedback" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
         <Setter Property="Glyph" Value="&#xED15;" />
     </Style>
+
+    <Style x:Key="Fluent_Document" TargetType="FontIcon" BasedOn="{StaticResource FluentBase}">
+        <Setter Property="Glyph" Value="&#xE7C3;" />
+    </Style>
 </ResourceDictionary>

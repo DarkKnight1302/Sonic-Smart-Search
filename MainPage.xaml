@@ -35,11 +35,12 @@
                             Width="500"
                             IsEnabled="{x:Bind AllowSearch, Mode=OneWay}" Margin="0,30,0,0"/>
         </StackPanel>
-        <StackPanel Background="Transparent" x:Name="SearchBox" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{x:Bind AllowSearch, Mode=OneWay}">
+        <StackPanel x:Name="SearchBox" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="300" Visibility="{x:Bind AllowSearch, Mode=OneWay}">
             <ListView ItemsSource="{x:Bind SearchResults, Mode=OneWay}"
                       IsItemClickEnabled="True"
                       MaxWidth="1000"
-                      ItemClick="ListView_ItemClick">
+                      ItemClick="ListView_ItemClick"
+                      HorizontalAlignment="Left">
             </ListView>
         </StackPanel>
     </Grid>
