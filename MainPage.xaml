@@ -8,8 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Loaded="Page_Loaded"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    Background="AliceBlue">
     <Grid>
         <Grid.Resources>
             <Style x:Key="TransitionTheme" TargetType="UserControl">
@@ -22,10 +21,18 @@
                 </Setter>
             </Style>
         </Grid.Resources>
-        <cntrl:Welcome x:Name="welcomePage" x:Load="{x:Bind ShowWelcome, Mode=OneWay}" Style="{StaticResource TransitionTheme}"></cntrl:Welcome>
-        <StackPanel Background="Transparent" Visibility="{x:Bind AllowSearch, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Top">
-        <Image Source="Views/RocketImage.png" Height="50" Width="50" Margin="0,20,0,0" HorizontalAlignment="Center"/>
-        <SearchBox x:Name="mySearchBox"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="1" Grid.Row="0" Background="Transparent" Visibility="{x:Bind AllowSearch, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <Image Source="Views/RocketImage.png" Height="50" Width="50" Margin="0,20,0,0" HorizontalAlignment="Center"/>
+            <SearchBox x:Name="mySearchBox"
                             VerticalAlignment="Top"
                             QuerySubmitted="mySearchBox_QuerySubmitted"
                             QueryChanged="mySearchBox_QueryChanged"
@@ -35,13 +42,20 @@
                             Width="500"
                             IsEnabled="{x:Bind AllowSearch, Mode=OneWay}" Margin="0,30,0,0"/>
         </StackPanel>
-        <StackPanel x:Name="SearchBox" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="300" Visibility="{x:Bind AllowSearch, Mode=OneWay}">
-            <ListView ItemsSource="{x:Bind SearchResults, Mode=OneWay}"
+        <ListView Grid.Column="1" Grid.Row="1" ItemsSource="{x:Bind SearchResults, Mode=OneWay}"
                       IsItemClickEnabled="True"
-                      MaxWidth="1000"
+                      MinWidth="1000"
+                      Margin="100,50,0,0"
                       ItemClick="ListView_ItemClick"
+                      Visibility="{x:Bind AllowSearch, Mode=OneWay}"
+                      VerticalAlignment="Top"
                       HorizontalAlignment="Left">
-            </ListView>
-        </StackPanel>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="BorderThickness" Value="2"/>
+                    <Setter Property="Margin" Value="0,2,0,0"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
     </Grid>
 </Page>

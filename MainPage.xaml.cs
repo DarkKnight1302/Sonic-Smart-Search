@@ -1,5 +1,4 @@
 ﻿using DynamicData.Binding;
-using SonicExplorer.Views;
 using SonicExplorerLib;
 using SonicExplorerLib.Models;
 using System;
@@ -66,9 +65,16 @@ namespace SonicExplorer
 
         private async void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            string path = e.ClickedItem as string;
-            StorageFile file = await StorageFile.GetFileFromPathAsync(path);
-            await Launcher.LaunchFileAsync(file);
+            SearchResultItem item = e.ClickedItem as SearchResultItem;
+            if (item.SearchResult.isFolder)
+            {
+                await Launcher.LaunchFolderPathAsync(item.SearchResult.path);
+            }
+            else
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(item.SearchResult.path);
+                await Launcher.LaunchFileAsync(file);
+            }
         }
     }
 }

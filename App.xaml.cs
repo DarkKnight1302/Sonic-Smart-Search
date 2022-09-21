@@ -77,7 +77,14 @@ namespace SonicExplorer
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    if (SettingsContainer.instance.Value.GetValue<bool>("indexingComplete") == true)
+                    {
+                        rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    }
+                    else
+                    {
+                        rootFrame.Navigate(typeof(Welcome), e.Arguments);
+                    }
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
@@ -92,7 +99,7 @@ namespace SonicExplorer
                     SecondaryButtonText = "Close",
                     PrimaryButtonStyle = Current.Resources.TryGetValue("DialogPrimaryButtonStyle", out object temp) ? temp as Style : null,
                     SecondaryButtonStyle = Current.Resources.TryGetValue("DialogButtonStyle", out object temp2) ? temp2 as Style : null,
-                    CornerRadius = new CornerRadius { BottomLeft = 2, BottomRight = 2, TopLeft = 2, TopRight = 2},
+                    CornerRadius = new CornerRadius { BottomLeft = 2, BottomRight = 2, TopLeft = 2, TopRight = 2 },
                     SecondaryButtonCommand = new DelegateCommand(async () => await ApplicationView.GetForCurrentView().TryConsolidateAsync()),
                     PrimaryButtonCommand = new DelegateCommand(async () => await Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-broadfilesystemaccess"))),
                     DefaultButton = ContentDialogButton.Primary,
