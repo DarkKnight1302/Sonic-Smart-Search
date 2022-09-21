@@ -1,6 +1,4 @@
-﻿using Lucene.Net.Analysis.Standard;
-using Lucene.Net.Analysis;
-using Lucene.Net.Search;
+﻿using Lucene.Net.Search;
 using System;
 using System.IO;
 using Lucene.Net.Store;
@@ -39,9 +37,9 @@ namespace SonicExplorerLib
             }
         }
 
-        public void SearchForFileOrFolder(string keyword)
+        public async void SearchForFileOrFolder(string keyword)
         {
-            SearchResultService.instance.ClearList();
+            await SearchResultService.instance.ClearList().ConfigureAwait(false);
             keyword = keyword?.Trim();
             if (string.IsNullOrEmpty(keyword) || keyword.Length < 2 || string.IsNullOrWhiteSpace(keyword))
             {
@@ -51,13 +49,13 @@ namespace SonicExplorerLib
             CancellationTokenSource source = new CancellationTokenSource();
             foreach (IndexSearcher searcher in searchers)
             {
-                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source)));
+                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source, 0)));
             }
         }
 
-        public void SearchRealtimeForFileOrFolder(string keyword)
+        public async void SearchRealtimeForFileOrFolder(string keyword)
         {
-            SearchResultService.instance.ClearList();
+            await SearchResultService.instance.ClearList().ConfigureAwait(false);
             keyword = keyword?.Trim();
             if (string.IsNullOrEmpty(keyword) || keyword.Length < 3 || string.IsNullOrWhiteSpace(keyword))
             {
@@ -67,25 +65,15 @@ namespace SonicExplorerLib
             CancellationTokenSource source = new CancellationTokenSource();
             foreach (IndexSearcher searcher in searchers)
             {
-                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source)));
+                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source, 0)));
             }
         }
 
-        private bool GetFilePaths(IndexSearcher searcher, string keyword, CancellationToken cancellationToken, CancellationTokenSource source)
+        private bool GetFilePaths(IndexSearcher searcher, string keyword, CancellationToken cancellationToken, CancellationTokenSource source, int rank)
         {
             TermQuery termQuery = new TermQuery(new Term("name", keyword));
             TopDocs docs = searcher.Search(termQuery, 3);
             List<string> paths = new List<string>();
-            if (docs.TotalHits == 0)
-            {
-                var wildcardQuery = new WildcardQuery(new Term("name", $"*{keyword}*"));
-                docs = searcher.Search(wildcardQuery, 3);
-            }
-            if (docs.TotalHits == 0 && !cancellationToken.IsCancellationRequested)
-            {
-                var phrase = new FuzzyQuery(new Term("name", keyword), 2);
-                docs = searcher.Search(phrase, 3);
-            }
             if (docs.TotalHits == 0 && keyword.Any(x => Char.IsWhiteSpace(x)) && !cancellationToken.IsCancellationRequested)
             {
                 string[] splitwords = keyword.Split(' ');
@@ -95,14 +83,27 @@ namespace SonicExplorerLib
                     {
                         continue;
                     }
-                    if (GetFilePaths(searcher, split, cancellationToken, source))
+                    if (GetFilePaths(searcher, split, cancellationToken, source, rank))
                     {
                         return true;
                     }
                 }
             }
+            if (docs.TotalHits == 0)
+            {
+                var wildcardQuery = new WildcardQuery(new Term("name", $"*{keyword}*"));
+                docs = searcher.Search(wildcardQuery, 3);
+                rank++;
+            }
             if (docs.TotalHits == 0 && !cancellationToken.IsCancellationRequested)
             {
+                var phrase = new FuzzyQuery(new Term("name", keyword), 2);
+                docs = searcher.Search(phrase, 3);
+                rank++;
+            }
+            if (docs.TotalHits == 0 && !cancellationToken.IsCancellationRequested)
+            {
+                rank++;
                 docs = SubstringMatching(searcher, keyword, cancellationToken);
                 if (docs == null)
                 {
@@ -117,7 +118,7 @@ namespace SonicExplorerLib
             source.Cancel();
             foreach (ScoreDoc hit in docs.ScoreDocs)
             {
-                var foundDoc = searcher.Doc(hit.Doc);   
+                var foundDoc = searcher.Doc(hit.Doc);
                 paths.Add(foundDoc.Get("path"));
                 Debug.WriteLine($"Path found {foundDoc.Get("path")}");
                 if (foundDoc.Get("folder") != null)
@@ -125,7 +126,7 @@ namespace SonicExplorerLib
                     Debug.WriteLine($"Found folder with name {foundDoc.Get("name")}");
                 }
             }
-            SearchResultService.instance.AddItem(paths);
+            SearchResultService.instance.AddItem(paths, rank);
             return true;
         }
 
