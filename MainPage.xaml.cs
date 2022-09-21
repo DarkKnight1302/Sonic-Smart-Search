@@ -43,6 +43,8 @@ namespace SonicExplorer
         public bool ShowWelcome => SettingsContainer.instance.Value.GetValue<bool>("indexingComplete") != true;
 
         public ObservableCollection<string> SearchResults => SearchResultService.instance.SearchResults;
+        public ObservableCollection<ListItemContext> SearchResultsList => new ObservableCollection<ListItemContext>();
+        
 
         private void mySearchBox_QuerySubmitted(SearchBox sender, SearchBoxQuerySubmittedEventArgs args)
         {
