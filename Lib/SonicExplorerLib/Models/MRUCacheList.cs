@@ -14,7 +14,6 @@ namespace SonicExplorerLib.Models
     {
         private SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
         public ObservableCollection<RecentOpenItem>RecentFilesList { get; private set; }
-        private volatile int maxCacheSize = 4;
         private CoreDispatcher Dispatcher;
         public static MRUCacheList instance => lazyInstance.Value;
 
@@ -26,21 +25,30 @@ namespace SonicExplorerLib.Models
             this.Dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         }
 
-        public async void AddItem(List<RecentItems> recentPaths)
+        public async void AddItem(RecentItems recentPath)
         {
             await this.SemaphoreSlim.WaitAsync();
             try
             {
+                var RecentFileItem = new RecentOpenItem(recentPath);
                 await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    if (recentPaths.Count < maxCacheSize)
+                    int idx = AlreadyPresent(recentPath);
+                    if (idx >= 0)
                     {
-                        recentPaths.ForEach(x => RecentFilesList.Add(new RecentOpenItem(x)));
+                        RecentFilesList.RemoveAt(idx);
+                    }
+
+                    if (RecentFilesList.Count < 4)
+                    {
+                        RecentFilesList.Insert(0, RecentFileItem);
                     }
                     else
                     {
-                        RecentFilesList.RemoveAt(0);
-                        recentPaths.ForEach(x => RecentFilesList.Add(new RecentOpenItem(x)));
+                        int lastIdx = RecentFilesList.Count - 1;
+                        RecentFilesList.RemoveAt(lastIdx);
+                        RecentFilesList.Insert(0, RecentFileItem);
+                        
                     }
                 });
             }
@@ -48,6 +56,20 @@ namespace SonicExplorerLib.Models
             {
                 this.SemaphoreSlim.Release();
             }            
+        }
+
+        public int AlreadyPresent(RecentItems item)
+        {
+            RecentOpenItem RecentFileItem = new RecentOpenItem(item);
+            int cnt = RecentFilesList.Count;
+            for (int i = 0; i<cnt; i++)
+            {
+                if(RecentFilesList[i].RecentItems.path == RecentFileItem.RecentItems.path)
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
     }
 }

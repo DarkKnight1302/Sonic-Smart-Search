@@ -23,7 +23,11 @@ namespace SonicExplorerLib.Models
         {
             this.InitializeComponent();
             this.RecentItems = recentItems;
+            RecentFontIcon.FontFamily = new FontFamily("Segoe MDL2 Assets");
+            RecentFontIcon.Glyph = "\xF000";
         }
         public RecentItems RecentItems { get; private set; }
+        public string Glyph { get; private set; }
+
     }
 }

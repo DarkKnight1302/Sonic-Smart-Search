@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml;
 using static System.Net.WebRequestMethods;
 using Path = System.IO.Path;
 

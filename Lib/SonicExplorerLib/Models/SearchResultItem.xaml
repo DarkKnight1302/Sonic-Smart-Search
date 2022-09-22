@@ -6,33 +6,35 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    Width="1000"
     d:DesignHeight="50"
     d:DesignWidth="400">
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <FontIcon
+    <Border BorderBrush="LightGray" BorderThickness="1">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <FontIcon
                 Grid.Column="0"
-                Style="{StaticResource Fluent_Document}"
-                Margin="19,0,15,0"
-                FontSize="15"/>
-        <StackPanel  
+                x:Name="ResultFontIcon"
+                Margin="0,0,5,0"/>
+            <StackPanel  
                 Grid.Column="1"
                 VerticalAlignment="Center">
-            <TextBlock 
+                <TextBlock 
                     Text="{x:Bind SearchResult.fileName}"
                     d:Text="Smart Charging"
                     Style="{StaticResource Body}"
-                    d:Foreground="Black" />
-            <TextBlock 
+                    Foreground="Black" />
+                <TextBlock 
                     Text="{x:Bind SearchResult.path}"
                     d:Text="SubTitle"
                     Style="{StaticResource CaptionSecondary}"
-                    d:Foreground="Gray" />
-        </StackPanel>
-    </Grid>
+                    Foreground="Gray" />
+            </StackPanel>
+        </Grid>
+    </Border>
 </UserControl>

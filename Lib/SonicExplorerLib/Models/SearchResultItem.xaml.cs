@@ -23,8 +23,19 @@ namespace SonicExplorerLib.Models
         {
             this.InitializeComponent();
             this.SearchResult = searchResult;
+            ResultFontIcon.FontFamily = new FontFamily("Segoe MDL2 Assets");
+            if (searchResult.isFolder)
+            {
+                ResultFontIcon.Glyph = "\xED25";
+            }
+            else
+            {
+                ResultFontIcon.Glyph = "\xF000";
+            }
         }
 
         public SearchResult SearchResult { get; private set; }
+
+        public string Glyph { get; private set; }
     }
 }
