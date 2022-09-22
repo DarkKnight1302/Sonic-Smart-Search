@@ -125,7 +125,7 @@ namespace SonicExplorerLib
                     fileName = foundDoc.Get("name"),
                     path = foundDoc.Get("path"),
                     isFolder = foundDoc.Get("folder") != null
-                });
+                });   
             }
             SearchResultService.instance.AddItem(paths, rank);
             return true;

@@ -3,6 +3,7 @@ using SonicExplorer.Views;
 using SonicExplorerLib;
 using SonicExplorerLib.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Windows.ApplicationModel.Core;
@@ -25,9 +26,12 @@ namespace SonicExplorer
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public List<RecentItems> recentPaths;
+
         public MainPage()
         {
             this.InitializeComponent();
+             recentPaths = new List<RecentItems>();
             SearchResultService.instance.refreshSearch += ((sender, args) =>
             {
                 search = new LuceneContentSearch();
@@ -45,6 +49,7 @@ namespace SonicExplorer
         public bool ShowWelcome => SettingsContainer.instance.Value.GetValue<bool>("indexingComplete") != true;
 
         public ObservableCollection<SearchResultItem> SearchResults => SearchResultService.instance.SearchResults;
+        public ObservableCollection<RecentOpenItem> RecentFiles => MRUCacheList.instance.RecentFilesList;
         
         private void mySearchBox_QuerySubmitted(SearchBox sender, SearchBoxQuerySubmittedEventArgs args)
         {
@@ -69,6 +74,12 @@ namespace SonicExplorer
             string path = e.ClickedItem as string;
             StorageFile file = await StorageFile.GetFileFromPathAsync(path);
             await Launcher.LaunchFileAsync(file);
+            recentPaths.Add(new RecentItems
+            {
+                fileName = file.DisplayName,
+                path = file.Path,
+            });
+            MRUCacheList.instance.AddItem(recentPaths);
         }
     }
 }

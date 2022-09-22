@@ -42,6 +42,14 @@
                       ItemClick="ListView_ItemClick"
                       HorizontalAlignment="Left">
             </ListView>
+        
+            <TextBlock Text="Recent"/>
+            <ListView ItemsSource="{x:Bind RecentFiles, Mode=OneWay}"
+                      IsItemClickEnabled="True"
+                      MaxWidth="1000"
+                      ItemClick="ListView_ItemClick"
+                      HorizontalAlignment="Left">
+            </ListView>
         </StackPanel>
     </Grid>
 </Page>

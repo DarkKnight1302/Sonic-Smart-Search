@@ -126,6 +126,11 @@
     <Compile Include="ContentIndexer.cs" />
     <Compile Include="DisposableBackgroundTaskDeferral.cs" />
     <Compile Include="LuceneContentSearch.cs" />
+    <Compile Include="Models\MRUCacheList.cs" />
+    <Compile Include="Models\RecentItems.cs" />
+    <Compile Include="Models\RecentOpenItem.xaml.cs">
+      <DependentUpon>RecentOpenItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\SearchResultItem.xaml.cs">
       <DependentUpon>SearchResultItem.xaml</DependentUpon>
@@ -156,6 +161,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Models\RecentOpenItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Models\SearchResultItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
