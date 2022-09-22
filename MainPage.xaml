@@ -31,8 +31,9 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="1" Grid.Row="0" Background="Transparent" Visibility="{x:Bind AllowSearch, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Top">
-            <Image Source="Views/RocketImage.png" Height="50" Width="50" Margin="0,20,0,0" HorizontalAlignment="Center"/>
+            <Image Source="Assets/RocketImage.png" Height="50" Width="50" Margin="0,20,0,0" HorizontalAlignment="Center"/>
             <SearchBox x:Name="mySearchBox"
+                            CornerRadius="4"
                             VerticalAlignment="Top"
                             QuerySubmitted="mySearchBox_QuerySubmitted"
                             QueryChanged="mySearchBox_QueryChanged"
@@ -44,12 +45,13 @@
         </StackPanel>
         <ListView Grid.Column="1" Grid.Row="1" ItemsSource="{x:Bind SearchResults, Mode=OneWay}"
                       IsItemClickEnabled="True"
+                     Name="ResultList"
                       MinWidth="1000"
-                      Margin="100,50,0,0"
+                      Margin="100,50,0,50"
                       ItemClick="ListView_ItemClick"
                       Visibility="{x:Bind AllowSearch, Mode=OneWay}"
                       VerticalAlignment="Top"
-                      HorizontalAlignment="Left">
+                      HorizontalAlignment="Center">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="BorderThickness" Value="2"/>

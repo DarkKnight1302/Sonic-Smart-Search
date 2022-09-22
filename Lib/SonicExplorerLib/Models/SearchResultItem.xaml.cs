@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -37,5 +39,29 @@ namespace SonicExplorerLib.Models
         public SearchResult SearchResult { get; private set; }
 
         public string Glyph { get; private set; }
+
+        public bool ShowOpenWith => !this.SearchResult.isFolder;
+        public bool ShowOpenInExplorer => this.SearchResult.isFolder;
+
+
+        private async void Button_Click_Open(object sender, RoutedEventArgs e)
+        {
+            StorageFile file = await StorageFile.GetFileFromPathAsync(this.SearchResult.path);
+            await Launcher.LaunchFileAsync(file);
+        }
+
+        private async void Button_Click_OpenWith(object sender, RoutedEventArgs e)
+        {
+            StorageFile file = await StorageFile.GetFileFromPathAsync(this.SearchResult.path);
+            await Launcher.LaunchFileAsync(file, new LauncherOptions
+            {
+                DisplayApplicationPicker = true
+            });
+        }
+
+        private async void Button_Click_OpenFolder(object sender, RoutedEventArgs e)
+        {
+             await Launcher.LaunchFolderPathAsync(this.SearchResult.path);
+        }
     }
 }
