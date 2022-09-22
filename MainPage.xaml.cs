@@ -9,7 +9,6 @@ using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Animation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -21,6 +20,7 @@ namespace SonicExplorer
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
         private LuceneContentSearch search;
+        private volatile string lastKey;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -53,6 +53,7 @@ namespace SonicExplorer
         private void mySearchBox_QueryChanged(SearchBox sender, SearchBoxQueryChangedEventArgs args)
         {
             search?.SearchRealtimeForFileOrFolder(args.QueryText.ToLower());
+            lastKey = args.QueryText;
         }
 
         private void Page_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -84,6 +85,10 @@ namespace SonicExplorer
                 RadioButton rb = sender as RadioButton;
                 search?.SelectSearchSegment(rb.Name);
                 search = new LuceneContentSearch();
+                if (!string.IsNullOrWhiteSpace(lastKey))
+                {
+                    search?.SearchRealtimeForFileOrFolder(lastKey.ToLower());
+                }
             }
         }
     }

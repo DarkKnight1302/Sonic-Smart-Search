@@ -87,7 +87,7 @@ namespace SonicExplorerLib
             CancellationTokenSource source = new CancellationTokenSource();
             foreach (IndexSearcher searcher in searchers)
             {
-                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source, 0)));
+                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source, 0, false)));
             }
         }
 
@@ -103,11 +103,11 @@ namespace SonicExplorerLib
             CancellationTokenSource source = new CancellationTokenSource();
             foreach (IndexSearcher searcher in searchers)
             {
-                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source, 0)));
+                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source, 0, false)));
             }
         }
 
-        private bool GetFilePaths(IndexSearcher searcher, string keyword, CancellationToken cancellationToken, CancellationTokenSource source, int rank)
+        private bool GetFilePaths(IndexSearcher searcher, string keyword, CancellationToken cancellationToken, CancellationTokenSource source, int rank, bool split)
         {
             bool resultFound = false;
             // Reduce weight for very short keywords while splitting.
@@ -128,15 +128,14 @@ namespace SonicExplorerLib
             if (keyword.Any(x => Char.IsWhiteSpace(x)) && !cancellationToken.IsCancellationRequested)
             {
                 string[] splitwords = keyword.Split(' ');
-                foreach (string split in splitwords)
+                foreach (string splitKeys in splitwords)
                 {
-                    if (split.Length < 2 || string.IsNullOrWhiteSpace(split))
+                    if (splitKeys.Length < 2 || string.IsNullOrWhiteSpace(splitKeys))
                     {
                         continue;
                     }
-                    Task.Run(() => GetFilePaths(searcher, split, cancellationToken, source, rank));
+                    Task.Run(() => GetFilePaths(searcher, splitKeys, cancellationToken, source, rank, true));
                 }
-                source.Cancel();
                 return true;
             }
 
@@ -177,7 +176,10 @@ namespace SonicExplorerLib
                 Debug.WriteLine($"IS cancellation requested {cancellationToken.IsCancellationRequested}");
                 return false;
             }
-            source.Cancel();
+            if (!split)
+            {
+                source.Cancel();
+            }
             PushToResult(docs, rank, searcher);
             return true;
         }
