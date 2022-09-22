@@ -279,7 +279,7 @@
 
         private Semaphore AcquireSystemSem()
         {
-            Semaphore sem = new Semaphore(0, 1, $"SurfaceAppBgTaskReg_{this.TaskName}", out bool isAllowedToContinue);
+            Semaphore sem = new Semaphore(0, 1, $"BgTaskReg_{this.TaskName}", out bool isAllowedToContinue);
 
             if (!isAllowedToContinue)
             {

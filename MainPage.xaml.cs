@@ -76,5 +76,15 @@ namespace SonicExplorer
                 await Launcher.LaunchFileAsync(file);
             }
         }
+
+        private void RadioButton_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            if (search != null)
+            {
+                RadioButton rb = sender as RadioButton;
+                search?.SelectSearchSegment(rb.Name);
+                search = new LuceneContentSearch();
+            }
+        }
     }
 }

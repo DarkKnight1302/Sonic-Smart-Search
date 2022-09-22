@@ -1,19 +1,15 @@
-﻿using System;
+﻿using Prism.Commands;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Windows.Input;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -21,6 +17,9 @@ namespace SonicExplorerLib.Models
 {
     public sealed partial class SearchResultItem : UserControl
     {
+        private ICommand _command1;
+        private ICommand _command2;
+
         public SearchResultItem(SearchResult searchResult)
         {
             this.InitializeComponent();
@@ -43,25 +42,29 @@ namespace SonicExplorerLib.Models
         public bool ShowOpenWith => !this.SearchResult.isFolder;
         public bool ShowOpenInExplorer => this.SearchResult.isFolder;
 
+        public ICommand LaunchFileOrFolder => _command1 ??= new DelegateCommand(() => Button_Click_Open());
 
-        private async void Button_Click_Open(object sender, RoutedEventArgs e)
+        public ICommand LaunchOpenWith => _command2 ??= new DelegateCommand(() => Button_Click_OpenWith());
+
+        private async void Button_Click_Open()
         {
-            StorageFile file = await StorageFile.GetFileFromPathAsync(this.SearchResult.path);
-            await Launcher.LaunchFileAsync(file);
+            if (this.SearchResult.isFolder)
+            {
+                await Launcher.LaunchFolderPathAsync(this.SearchResult.path);
+            } else
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(this.SearchResult.path);
+                await Launcher.LaunchFileAsync(file);
+            }
         }
 
-        private async void Button_Click_OpenWith(object sender, RoutedEventArgs e)
+        private async void Button_Click_OpenWith()
         {
             StorageFile file = await StorageFile.GetFileFromPathAsync(this.SearchResult.path);
             await Launcher.LaunchFileAsync(file, new LauncherOptions
             {
                 DisplayApplicationPicker = true
             });
-        }
-
-        private async void Button_Click_OpenFolder(object sender, RoutedEventArgs e)
-        {
-             await Launcher.LaunchFolderPathAsync(this.SearchResult.path);
         }
     }
 }

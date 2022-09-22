@@ -14,7 +14,7 @@ namespace SonicExplorerLib
 {
     public class LuceneContentSearch
     {
-        private IDictionary<string, bool> LocationsDictionary = new Dictionary<string, bool>
+        private static IDictionary<string, bool> LocationsDictionary = new Dictionary<string, bool>
         {
             {"documents", true},
             {"downloads", true},
@@ -49,6 +49,29 @@ namespace SonicExplorerLib
                 {
                     Console.WriteLine(e.Message);
                 }
+            }
+        }
+
+        public void SelectSearchSegment(string segment)
+        {
+            switch (segment)
+            {
+                case "all":
+                    foreach (string key in LocationsDictionary.Keys.ToList())
+                    {
+                        if (LocationsDictionary[key] == false)
+                        {
+                            LocationsDictionary[key] = true;
+                        }
+                    }
+                    break;
+                default:
+                    foreach (string key in LocationsDictionary.Keys.ToList())
+                    {
+                        LocationsDictionary[key] = false;
+                    }
+                    LocationsDictionary[segment] = true;
+                    break;
             }
         }
 

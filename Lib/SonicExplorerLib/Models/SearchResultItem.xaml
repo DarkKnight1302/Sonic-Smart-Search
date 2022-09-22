@@ -18,8 +18,8 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <FontIcon
                 Grid.Column="0"
@@ -40,14 +40,12 @@
                     Foreground="Gray" />
             </StackPanel>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="2" Margin="5,0,5,0">
-                <Button x:Name="Button1" Margin="5,0,5,0" Content="Open with" Style="{StaticResource SurfaceAppButton}" 
-                        x:Load="{x:Bind ShowOpenWith}"
-                        Click="Button_Click_OpenWith"></Button>
-                <Button x:Name="Button2" Margin="5,0,5,0" Content="Open" Style="{StaticResource SurfaceAppButton}"
-                        Click="Button_Click_Open"
-                        x:Load="{x:Bind ShowOpenWith}"></Button>
-                <Button x:Name="Button3" Margin="5,0,5,0" Width="185" Content="Open in explorer" Style="{StaticResource SurfaceAppButton}"
-                        x:Load="{x:Bind ShowOpenInExplorer}" Click="Button_Click_OpenFolder"></Button>
+                <Button x:Name="Button1" Margin="5,0,5,0" Content="Open with" Style="{StaticResource AppButton}" 
+                        x:Load="{x:Bind ShowOpenWith}" Command="{x:Bind LaunchOpenWith}"></Button>
+                <Button x:Name="Button2" Margin="5,0,5,0" Content="Open" Style="{StaticResource AppButton}"
+                        x:Load="{x:Bind ShowOpenWith}" Command="{x:Bind LaunchFileOrFolder}"></Button>
+                <Button x:Name="Button3" Margin="5,0,5,0" Width="185" Content="Open in explorer" Style="{StaticResource AppButton}"
+                        x:Load="{x:Bind ShowOpenInExplorer}" Command="{x:Bind LaunchFileOrFolder}"></Button>
             </StackPanel>
         </Grid>
     </Border>
