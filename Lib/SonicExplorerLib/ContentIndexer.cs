@@ -210,6 +210,7 @@ namespace SonicExplorerLib
                 var doc = new Document();
                 doc.Add(new Field("name", file.Name.ToLower(), new FieldType { IsIndexed = true, IsStored = true, IndexOptions = IndexOptions.DOCS_ONLY }));
                 doc.Add(new Field("path", file.Path, new FieldType { IsIndexed = false, IsStored = true }));
+                doc.Add(new Field("displayName", file.Name, new FieldType { IsIndexed = false, IsStored = true }));
                 Term t = new Term("name", file.Name.ToLower());
                 writer.UpdateDocument(t, doc);
             }
@@ -226,6 +227,7 @@ namespace SonicExplorerLib
                 var folderDoc = new Document();
                 folderDoc.Add(new Field("name", folder.Name.ToLower(), new FieldType { IsIndexed = true, IsStored = true, IndexOptions = IndexOptions.DOCS_ONLY }));
                 folderDoc.Add(new Field("path", folder.Path, new FieldType { IsIndexed = false, IsStored = true }));
+                folderDoc.Add(new Field("displayName", folder.Name, new FieldType { IsIndexed = false, IsStored = true }));
                 folderDoc.Add(new Field("folder", "true", new FieldType { IsIndexed = false, IsStored = true }));
                 Term folderTerm = new Term("name", folder.Name.ToLower());
                 writer.UpdateDocument(folderTerm, folderDoc);
@@ -240,6 +242,7 @@ namespace SonicExplorerLib
                     var doc = new Document();
                     doc.Add(new Field("name", file.Name.ToLower(), new FieldType { IsIndexed = true, IsStored = true, IndexOptions = IndexOptions.DOCS_ONLY }));
                     doc.Add(new Field("path", file.Path, new FieldType { IsIndexed = false, IsStored = true }));
+                    doc.Add(new Field("displayName", file.Name, new FieldType { IsIndexed = false, IsStored = true }));
                     Term t = new Term("name", file.Name.ToLower());
                     writer.UpdateDocument(t, doc);
                 }
@@ -281,6 +284,7 @@ namespace SonicExplorerLib
                     }
                 }
             }
+            SettingsContainer.instance.Value.SetValue<bool>("indexingComplete", false);
             SearchResultService.instance.RefreshSearch();
         }
     }

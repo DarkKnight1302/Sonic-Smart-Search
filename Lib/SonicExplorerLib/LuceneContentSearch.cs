@@ -14,27 +14,64 @@ namespace SonicExplorerLib
 {
     public class LuceneContentSearch
     {
-        private string[] IndexedLocations = { "documents", "downloads", "desktop", "pictures", "music", "videos" };
+        private static IDictionary<string, bool> LocationsDictionary = new Dictionary<string, bool>
+        {
+            {"documents", true},
+            {"downloads", true},
+            {"desktop", true},
+            {"pictures", true},
+            {"music", true},
+            {"videos", true},
+        };
+
         private List<IndexSearcher> searchers = new List<IndexSearcher>();
 
         public LuceneContentSearch()
         {
             // Construct a machine-independent path for the index
-            foreach (string location in IndexedLocations)
+            foreach (KeyValuePair<string, bool> location in LocationsDictionary)
             {
                 try
                 {
+                    if (!location.Value)
+                    {
+                        continue;
+                    }
                     string basePath = Environment.GetFolderPath(
                        Environment.SpecialFolder.CommonApplicationData);
-                    string indexPath = Path.Combine(basePath, $"hyperXindex-{location}");
+                    string indexPath = Path.Combine(basePath, $"hyperXindex-{location.Key}");
                     var dir = FSDirectory.Open(indexPath);
                     var reader = DirectoryReader.Open(dir);
                     var searcher = new IndexSearcher(reader);
                     searchers.Add(searcher);
-                } catch (DirectoryNotFoundException e)
+                }
+                catch (DirectoryNotFoundException e)
                 {
                     Console.WriteLine(e.Message);
                 }
+            }
+        }
+
+        public void SelectSearchSegment(string segment)
+        {
+            switch (segment)
+            {
+                case "all":
+                    foreach (string key in LocationsDictionary.Keys.ToList())
+                    {
+                        if (LocationsDictionary[key] == false)
+                        {
+                            LocationsDictionary[key] = true;
+                        }
+                    }
+                    break;
+                default:
+                    foreach (string key in LocationsDictionary.Keys.ToList())
+                    {
+                        LocationsDictionary[key] = false;
+                    }
+                    LocationsDictionary[segment] = true;
+                    break;
             }
         }
 
@@ -50,7 +87,7 @@ namespace SonicExplorerLib
             CancellationTokenSource source = new CancellationTokenSource();
             foreach (IndexSearcher searcher in searchers)
             {
-                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source, 0)));
+                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source, 0, false)));
             }
         }
 
@@ -66,43 +103,62 @@ namespace SonicExplorerLib
             CancellationTokenSource source = new CancellationTokenSource();
             foreach (IndexSearcher searcher in searchers)
             {
-                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source, 0)));
+                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source, 0, false)));
             }
         }
 
-        private bool GetFilePaths(IndexSearcher searcher, string keyword, CancellationToken cancellationToken, CancellationTokenSource source, int rank)
+        private bool GetFilePaths(IndexSearcher searcher, string keyword, CancellationToken cancellationToken, CancellationTokenSource source, int rank, bool split)
         {
+            bool resultFound = false;
+            // Reduce weight for very short keywords while splitting.
+            if (keyword.Length < 3)
+            {
+                rank++;
+            }
+
             TermQuery termQuery = new TermQuery(new Term("name", keyword));
-            TopDocs docs = searcher.Search(termQuery, 3);
-            List<SearchResult> paths = new List<SearchResult>();
-            if (docs.TotalHits == 0 && keyword.Any(x => Char.IsWhiteSpace(x)) && !cancellationToken.IsCancellationRequested)
+            TopDocs docs = searcher.Search(termQuery, 10);
+
+            if (docs.TotalHits > 0)
+            {
+                Task.Run(() => PushToResult(docs, rank, searcher));
+                resultFound = true;
+            }
+
+            if (keyword.Any(x => Char.IsWhiteSpace(x)) && !cancellationToken.IsCancellationRequested)
             {
                 string[] splitwords = keyword.Split(' ');
-                foreach (string split in splitwords)
+                foreach (string splitKeys in splitwords)
                 {
-                    if (split.Length < 2)
+                    if (splitKeys.Length < 2 || string.IsNullOrWhiteSpace(splitKeys))
                     {
                         continue;
                     }
-                    if (GetFilePaths(searcher, split, cancellationToken, source, rank))
-                    {
-                        return true;
-                    }
+                    Task.Run(() => GetFilePaths(searcher, splitKeys, cancellationToken, source, rank, true));
                 }
+                return true;
             }
-            if (docs.TotalHits == 0)
+
+            var wildcardQuery = new WildcardQuery(new Term("name", $"*{keyword}*"));
+            docs = searcher.Search(wildcardQuery, 10);
+
+            if (docs.TotalHits > 0)
             {
-                var wildcardQuery = new WildcardQuery(new Term("name", $"*{keyword}*"));
-                docs = searcher.Search(wildcardQuery, 3);
-                rank++;
+                resultFound = true;
+                Task.Run(() => PushToResult(docs, rank, searcher));
+                return true;
             }
-            if (docs.TotalHits == 0 && !cancellationToken.IsCancellationRequested)
+            if (!resultFound && !cancellationToken.IsCancellationRequested)
             {
                 var phrase = new FuzzyQuery(new Term("name", keyword), 2);
                 docs = searcher.Search(phrase, 3);
+                if (docs.TotalHits > 0)
+                {
+                    resultFound = true;
+                }
                 rank++;
             }
-            if (docs.TotalHits == 0 && !cancellationToken.IsCancellationRequested)
+            if (!resultFound && !cancellationToken.IsCancellationRequested)
             {
                 rank++;
                 docs = SubstringMatching(searcher, keyword, cancellationToken);
@@ -110,33 +166,46 @@ namespace SonicExplorerLib
                 {
                     return false;
                 }
+                if (docs.TotalHits > 0)
+                {
+                    resultFound = true;
+                }
             }
-            if (docs.TotalHits == 0)
+            if (!resultFound)
             {
                 Debug.WriteLine($"IS cancellation requested {cancellationToken.IsCancellationRequested}");
                 return false;
             }
-            source.Cancel();
+            if (!split)
+            {
+                source.Cancel();
+            }
+            PushToResult(docs, rank, searcher);
+            return true;
+        }
+
+        private void PushToResult(TopDocs docs, int rank, IndexSearcher searcher)
+        {
+            List<SearchResult> paths = new List<SearchResult>();
             foreach (ScoreDoc hit in docs.ScoreDocs)
             {
                 var foundDoc = searcher.Doc(hit.Doc);
                 paths.Add(new SearchResult
                 {
-                    fileName = foundDoc.Get("name"),
+                    fileName = foundDoc.Get("displayName"),
                     path = foundDoc.Get("path"),
                     isFolder = foundDoc.Get("folder") != null
                 });   
             }
             SearchResultService.instance.AddItem(paths, rank);
-            return true;
         }
 
         private TopDocs SubstringMatching(IndexSearcher searcher, string keyword, CancellationToken cancellationToken)
         {
             int size = keyword.Length;
-            for(int window = size-1 ; window > 1; window--)
+            for (int window = size - 1; window > 1; window--)
             {
-                for(int i=0; (i+window) <= size; i++)
+                for (int i = 0; (i + window) <= size; i++)
                 {
                     var substring = keyword.Substring(i, window);
                     var wildcardQuery = new WildcardQuery(new Term("name", $"*{substring}*"));

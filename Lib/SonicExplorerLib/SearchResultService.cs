@@ -51,7 +51,7 @@ namespace SonicExplorerLib
             {
                 await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
-                        if (SearchResults.Count < 10)
+                        if (SearchResults.Count < 20)
                         {
                             paths.ForEach(x => SearchResults.Add(new SearchResultItem(x)));
                         }

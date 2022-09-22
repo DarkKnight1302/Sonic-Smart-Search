@@ -2,76 +2,37 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- In this section we are defining all the TextBlock styles that the app will use. These styles set
-         font related properties only. Positioning and other properties can be set on the <TextBlock/>
-         or by creating a <Style BasedOn="OneOfTheBelow"/> locally in the resources of the page or control
-         that sets the other properties.
-
-         Please do not add any new <TextBlock/> styles. If you need to, please contact
-         anielsen@microsoft.com first. -->
-
-    <!-- Style user guide: Uwp\doc\XamlStyles.md -->
-
-    <!-- Figma = Corresponding styles within this file-->
-    <!-- Standard Button = SurfaceAppButton style (Description: Regular button with white background)-->
-    <!-- Accent Button = SurfaceAppButton style (Description: Button with system acent color in the background)-->
-    <!-- Link Button = Only one button of this type exists in the App and some custom styling is done in the file containing the button (Description : Button with hyperlink and no underlink )-->
-    <!-- Inline Link = Added styling in each file which uses a Hyperlink(Description : Standard hyperlinks within the App.)-->
-    <!-- Basic /editable combo box = BasicComboBoxStyle (Description: This is a regular combo box tailored to match Figma) Note: We don't use any editable ComboBoxes in our App-->
-    <!-- Default Toggle switch = NormalToggleSwitch (Description : toggle switch with text on right)-->
-    <!-- Selector Toggle switch = RightAlignedCompactToggleSwitchStyle (Description: Toggle switch with text on left)-->
-    <!-- Slider = SurfaceAppSliderStyle(Description : Slider with circular thumb and no ticks)-->
-
-    <!-- Surface App Toggle Button style -->
-    <Style x:Key="SurfaceAppToggleButton" TargetType="ToggleButton" BasedOn="{StaticResource DefaultToggleButtonStyle}">
+    
+    <Style x:Key="AppToggleButton" TargetType="ToggleButton" BasedOn="{StaticResource DefaultToggleButtonStyle}">
         <Setter Property="MinWidth" Value="88" />
     </Style>
 
-    <!-- Surface App Button style -->
-    <Style x:Key="SurfaceAppButton" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+    <Style x:Key="AppButton" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
         <Setter Property="MinWidth" Value="88" />
     </Style>
 
-    <!-- Surface App Accent Button style -->
-    <Style x:Key="SurfaceAccentButtonStyle" TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
+    <Style x:Key="InfoBarActionButton" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
         <Setter Property="MinWidth" Value="88" />
     </Style>
 
-    <!-- Surface App Info Bar Default Button style -->
-    <Style x:Key="SurfaceInfoBarActionButton" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+    <Style x:Key="AppAccentActionButton" TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
         <Setter Property="MinWidth" Value="88" />
     </Style>
 
-    <!-- Surface App Accent Button style -->
-    <Style x:Key="SurfaceAppAccentActionButton" TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
-        <Setter Property="MinWidth" Value="88" />
-    </Style>
-
-    <!-- Surface App Help and Support Default Button style -->
-    <Style x:Key="HelpAndSupportButtonDefaultStyle" TargetType="Button" BasedOn="{StaticResource SurfaceAppButton}">
-        <Setter Property="Margin" Value="0,0,10,0" />
-        <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="Width" Value="117" />
-    </Style>
-
-    <!-- Surface App TextBox -->
-    <Style x:Key="SurfaceAppTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxStyle}" />
+    <Style x:Key="AppTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxStyle}" />
 
     <!-- Combo box styles -->
     <Style x:Key="BasicComboBoxStyle" TargetType="ComboBox" BasedOn="{StaticResource DefaultComboBoxStyle}" />
 
-    <!-- Surface App Default Toggle switch-->
     <Style x:Key="NormalToggleSwitch" TargetType="ToggleSwitch" BasedOn="{StaticResource DefaultToggleSwitchStyle}" />
 
-    <!-- Surface App slider-->
-    <Style x:Key="SurfaceAppSliderStyle" TargetType="Slider" BasedOn="{StaticResource DefaultSliderStyle}" />
+    <Style x:Key="SliderStyle" TargetType="Slider" BasedOn="{StaticResource DefaultSliderStyle}" />
 
-    <!-- Surface App Checkbox-->
-    <Style x:Key="SurfaceAppCheckboxStyle" TargetType="CheckBox" BasedOn="{StaticResource DefaultCheckBoxStyle}" />
-    <Style TargetType="CheckBox" BasedOn="{StaticResource SurfaceAppCheckboxStyle}" />
+    <Style x:Key="CheckboxStyle" TargetType="CheckBox" BasedOn="{StaticResource DefaultCheckBoxStyle}" />
+    <Style TargetType="CheckBox" BasedOn="{StaticResource AppCheckboxStyle}" />
 
     <!-- HyperlinkButton style to make it look like a <Hyperlink/> -->
-    <Style x:Key="SurfaceAppMiniHyperlinkStyle" TargetType="HyperlinkButton">
+    <Style x:Key="MiniHyperlinkStyle" TargetType="HyperlinkButton">
         <Setter Property="FontSize" Value="{StaticResource BodySize}" />
         <Setter Property="Padding" Value="0" />
     </Style>
@@ -892,8 +853,8 @@
     </Style>
 
     <!-- Title bar button style-->
-    <Style x:Key="SurfaceAppDismissButton" TargetType="Button" >
-        <Setter Property="Background" Value="{ThemeResource SurfaceAppDismissButtonBackground}"/>
+    <Style x:Key="AppDismissButton" TargetType="Button" >
+        <Setter Property="Background" Value="{ThemeResource AppDismissButtonBackground}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -908,10 +869,10 @@
                                 <VisualState x:Name="PointerOver">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SurfaceAppDismissButtonBackgroundPointerOver}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppDismissButtonBackgroundPointerOver}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SurfaceAppDismissButtonForegroundPointerOver}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppDismissButtonForegroundPointerOver}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
                                     </Storyboard>
@@ -919,10 +880,10 @@
                                 <VisualState x:Name="Pressed">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SurfaceAppDismissButtonBackgroundPressed}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppDismissButtonBackgroundPressed}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SurfaceAppDismissButtonForegroundPressed}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppDismissButtonForegroundPressed}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter"/>
                                     </Storyboard>
@@ -992,14 +953,14 @@
                                             Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame
                                                 KeyTime="0"
-                                                Value="{ThemeResource SurfaceBrandBlue}"/>
+                                                Value="{ThemeResource BrandBlue}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames
                                             Storyboard.TargetName="ContentPresenter"
                                             Storyboard.TargetProperty="BorderBrush">
                                             <DiscreteObjectKeyFrame
                                                 KeyTime="0"
-                                                Value="{ThemeResource SurfaceBrandBlue}"/>
+                                                Value="{ThemeResource BrandBlue}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -1018,14 +979,14 @@
                                             Storyboard.TargetProperty="Background">
                                             <DiscreteObjectKeyFrame
                                                 KeyTime="0"
-                                                Value="{ThemeResource SurfaceBrandBlue}"/>
+                                                Value="{ThemeResource BrandBlue}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames
                                             Storyboard.TargetName="ContentPresenter"
                                             Storyboard.TargetProperty="BorderBrush">
                                             <DiscreteObjectKeyFrame
                                                 KeyTime="0"
-                                                Value="{ThemeResource SurfaceBrandBlue}"/>
+                                                Value="{ThemeResource BrandBlue}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>

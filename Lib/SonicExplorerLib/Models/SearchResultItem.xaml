@@ -4,13 +4,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SonicExplorerLib.Models"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Width="1000"
     d:DesignHeight="50"
     d:DesignWidth="400">
-
-    <Border BorderBrush="LightGray" BorderThickness="1">
+    <UserControl.Resources>
+        <media:AttachedCardShadow x:Key="CommonShadow" Offset="1" BlurRadius="5"/>
+    </UserControl.Resources>
+    <Border x:Name="ItemBorder" BorderBrush="LightGray" Background="WhiteSmoke" BorderThickness="0" ui:Effects.Shadow="{StaticResource CommonShadow}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -20,20 +24,28 @@
             <FontIcon
                 Grid.Column="0"
                 x:Name="ResultFontIcon"
-                Margin="0,0,5,0"/>
+                Margin="5,0,5,0"/>
             <StackPanel  
                 Grid.Column="1"
                 VerticalAlignment="Center">
                 <TextBlock 
                     Text="{x:Bind SearchResult.fileName}"
-                    d:Text="Smart Charging"
+                    d:Text="File Name"
                     Style="{StaticResource Body}"
                     Foreground="Black" />
                 <TextBlock 
                     Text="{x:Bind SearchResult.path}"
-                    d:Text="SubTitle"
+                    d:Text="File Path"
                     Style="{StaticResource CaptionSecondary}"
                     Foreground="Gray" />
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="2" Margin="5,0,5,0">
+                <Button x:Name="Button1" Margin="5,0,5,0" Content="Open with" Style="{StaticResource TextBlockButtonStyle}" 
+                        x:Load="{x:Bind ShowOpenWith}" Command="{x:Bind LaunchOpenWith}"></Button>
+                <Button x:Name="Button2" Margin="5,0,5,0" Content="Open" Style="{StaticResource TextBlockButtonStyle}"
+                        x:Load="{x:Bind ShowOpenWith}" Command="{x:Bind LaunchFileOrFolder}"></Button>
+                <Button x:Name="Button3" Margin="5,0,5,0" Content="Open in explorer" Style="{StaticResource TextBlockButtonStyle}"
+                        x:Load="{x:Bind ShowOpenInExplorer}" Command="{x:Bind LaunchFileOrFolder}"></Button>
             </StackPanel>
         </Grid>
     </Border>
