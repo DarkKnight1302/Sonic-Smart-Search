@@ -13,15 +13,15 @@
   IgnorableNamespaces="uap mp uap4 uap5 rescap uap3 desktop rescap">
 
 	<Identity
-	  Name="4aeea09e-ac77-4758-8569-6cd652574564"
-	  Publisher="CN=roparash"
-	  Version="4.0.3.0" />
+	  Name="49452RobinParashar.HyperX"
+	  Publisher="CN=DA77D6A3-6719-4BE4-B690-4193F233DE42"
+	  Version="1.0.6.0" />
 
-	<mp:PhoneIdentity PhoneProductId="4aeea09e-ac77-4758-8569-6cd652574564" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+	<mp:PhoneIdentity PhoneProductId="48dbb9e5-b298-4bcc-bb6c-071f469a4d37" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
 	<Properties>
-		<DisplayName>SonicExplorer</DisplayName>
-		<PublisherDisplayName>roparash</PublisherDisplayName>
+		<DisplayName>HyperX</DisplayName>
+		<PublisherDisplayName>Robin Parashar</PublisherDisplayName>
 		<Logo>Assets\StoreLogo.png</Logo>
 	</Properties>
 

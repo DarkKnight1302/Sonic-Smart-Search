@@ -24,7 +24,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -69,15 +69,14 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <StackPanel Grid.Column="1" Grid.Row="2">
+        <StackPanel x:Name="RecentFileStack" Grid.Column="1" Grid.Row="2" x:Load="{x:Bind ShowRecentFiles, Mode=OneWay}">
             <muxc:Expander
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"
-                Header="Recently opened files"
+                Header="Recent Viewed Files"
                 Background="AliceBlue"
                 Foreground="AliceBlue"
                 BorderBrush="AliceBlue"
-                
                 >
                 <ListView ItemsSource="{x:Bind RecentFiles, Mode=OneWay}"
                             IsItemClickEnabled="True"

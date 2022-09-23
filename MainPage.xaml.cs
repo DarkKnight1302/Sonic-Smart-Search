@@ -24,6 +24,7 @@ namespace SonicExplorer
     {
         private LuceneContentSearch search;
         private volatile string lastKey;
+        private bool showRecentFiles = true;
         private List<SearchResult> RecentlyOpenedList;
         private CoreDispatcher Dispatcher;
 
@@ -53,6 +54,19 @@ namespace SonicExplorer
 
         public bool ShowWelcome => SettingsContainer.instance.Value.GetValue<bool>("indexingComplete") != true;
 
+        public bool ShowRecentFiles
+        {
+            get => this.showRecentFiles;
+            set
+            {
+                if (showRecentFiles != value)
+                {
+                    this.showRecentFiles = value;
+                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ShowRecentFiles)));
+                }
+            }
+        }
+
         public ObservableCollection<SearchResultItem> SearchResults => SearchResultService.instance.SearchResults;
         // public ObservableCollection<SearchResult> RecentFiles => this.recentFiles;
         public ObservableCollection<RecentOpenItem> RecentFiles
@@ -73,6 +87,7 @@ namespace SonicExplorer
         private void mySearchBox_QueryChanged(SearchBox sender, SearchBoxQueryChangedEventArgs args)
         {
             search?.SearchRealtimeForFileOrFolder(args.QueryText.ToLower());
+            ShowRecentFiles = false;
             lastKey = args.QueryText;
         }
 

@@ -150,6 +150,16 @@ namespace SonicExplorerLib
             }
             if (!resultFound && !cancellationToken.IsCancellationRequested)
             {
+                var phrase = new FuzzyQuery(new Term("name", keyword), 1);
+                docs = searcher.Search(phrase, 3);
+                if (docs.TotalHits > 0)
+                {
+                    resultFound = true;
+                }
+                rank++;
+            }
+            if (!resultFound && !cancellationToken.IsCancellationRequested)
+            {
                 var phrase = new FuzzyQuery(new Term("name", keyword), 2);
                 docs = searcher.Search(phrase, 3);
                 if (docs.TotalHits > 0)
@@ -210,6 +220,12 @@ namespace SonicExplorerLib
                     var substring = keyword.Substring(i, window);
                     var wildcardQuery = new WildcardQuery(new Term("name", $"*{substring}*"));
                     var docs = searcher.Search(wildcardQuery, 3);
+                    if (docs.TotalHits > 0 || cancellationToken.IsCancellationRequested)
+                    {
+                        return docs;
+                    }
+                    var phrase = new FuzzyQuery(new Term("name", substring), 2);
+                    docs = searcher.Search(phrase, 3);
                     if (docs.TotalHits > 0 || cancellationToken.IsCancellationRequested)
                     {
                         return docs;
