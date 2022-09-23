@@ -2,6 +2,7 @@
 using SonicExplorerLib;
 using SonicExplorerLib.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Windows.ApplicationModel.Core;
@@ -24,9 +25,12 @@ namespace SonicExplorer
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public List<RecentItems> recentPaths;
+
         public MainPage()
         {
             this.InitializeComponent();
+             recentPaths = new List<RecentItems>();
             SearchResultService.instance.refreshSearch += ((sender, args) =>
             {
                 search = new LuceneContentSearch();
@@ -44,6 +48,7 @@ namespace SonicExplorer
         public bool ShowWelcome => SettingsContainer.instance.Value.GetValue<bool>("indexingComplete") != true;
 
         public ObservableCollection<SearchResultItem> SearchResults => SearchResultService.instance.SearchResults;
+        public ObservableCollection<RecentOpenItem> RecentFiles => MRUCacheList.instance.RecentFilesList;
         
         private void mySearchBox_QuerySubmitted(SearchBox sender, SearchBoxQuerySubmittedEventArgs args)
         {
@@ -75,6 +80,12 @@ namespace SonicExplorer
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(item.SearchResult.path);
                 await Launcher.LaunchFileAsync(file);
+                var recent = new RecentItems
+                {
+                    fileName = file.DisplayName,
+                    path = file.Path,
+                };
+                MRUCacheList.instance.AddItem(recent);
             }
         }
 
@@ -90,6 +101,20 @@ namespace SonicExplorer
                     search?.SearchRealtimeForFileOrFolder(lastKey.ToLower());
                 }
             }
+        }
+    
+
+        private async void RecentListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            RecentOpenItem item = e.ClickedItem as RecentOpenItem;
+            StorageFile file = await StorageFile.GetFileFromPathAsync(item.RecentItems.path);
+            await Launcher.LaunchFileAsync(file);
+            var recent = new RecentItems
+            {
+                fileName = file.DisplayName,
+                path = file.Path,
+            };
+            MRUCacheList.instance.AddItem(recent);
         }
     }
 }

@@ -55,6 +55,12 @@ namespace SonicExplorerLib.Models
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(this.SearchResult.path);
                 await Launcher.LaunchFileAsync(file);
+                var recent = new RecentItems
+                {
+                    fileName = file.DisplayName,
+                    path = file.Path,
+                };
+                MRUCacheList.instance.AddItem(recent);
             }
         }
 
@@ -65,6 +71,12 @@ namespace SonicExplorerLib.Models
             {
                 DisplayApplicationPicker = true
             });
+            var recent = new RecentItems
+            {
+                fileName = file.DisplayName,
+                path = file.Path,
+            };
+            MRUCacheList.instance.AddItem(recent);
         }
     }
 }
