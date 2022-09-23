@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.System;
@@ -81,6 +82,7 @@ namespace SonicExplorer
             {
                 search = new LuceneContentSearch();
             }
+            _ = Task.Run(async () => await ContentIndexer.GetInstance.IndexData());
         }
 
         private async void ListView_ItemClick(object sender, ItemClickEventArgs e)

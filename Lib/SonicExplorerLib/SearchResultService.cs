@@ -83,6 +83,47 @@ namespace SonicExplorerLib
             }
         }
 
+        public async void AddItem(SearchResult path, int rank)
+        {
+            if (rank > topRank)
+            {
+                return;
+            }
+            await this.SemaphoreSlim.WaitAsync();
+            try
+            {
+                if (rank > topRank)
+                {
+                    return;
+                }
+                bool removeItems = false;
+                if (rank < topRank)
+                {
+                    removeItems = true;
+                }
+                topRank = rank;
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    if (removeItems)
+                    {
+                        SearchResults.Clear();
+                    }
+                    if (SearchResults.Count < 15)
+                    {
+                        var result = new SearchResultItem(path);
+                        if (!SearchResults.Contains(result))
+                        {
+                            SearchResults.Add(result);
+                        }
+                    }
+                });
+            }
+            finally
+            {
+                this.SemaphoreSlim.Release();
+            }
+        }
+
         public async Task ClearList()
         {
             await this.SemaphoreSlim.WaitAsync();
