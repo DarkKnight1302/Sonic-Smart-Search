@@ -27,7 +27,6 @@ namespace SonicExplorer
         private volatile string lastKey;
         private bool showRecentFiles = true;
         private List<SearchResult> RecentlyOpenedList;
-        private CoreDispatcher Dispatcher;
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -38,7 +37,6 @@ namespace SonicExplorer
         {
             this.InitializeComponent();
             this.recentFiles = new ObservableCollection<RecentOpenItem>();
-            this.Dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
             SearchResultService.instance.refreshSearch += ((sender, args) =>
             {
                 search = new LuceneContentSearch();
@@ -69,7 +67,7 @@ namespace SonicExplorer
         }
 
         public ObservableCollection<SearchResultItem> SearchResults => SearchResultService.instance.SearchResults;
-        // public ObservableCollection<SearchResult> RecentFiles => this.recentFiles;
+
         public ObservableCollection<RecentOpenItem> RecentFiles
         {
             get => this.recentFiles;
@@ -79,7 +77,7 @@ namespace SonicExplorer
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(recentFiles)));
             }
         }
-        
+
         private void mySearchBox_QuerySubmitted(SearchBox sender, SearchBoxQuerySubmittedEventArgs args)
         {
             search?.SearchForFileOrFolder(args.QueryText.ToLower());
@@ -98,14 +96,6 @@ namespace SonicExplorer
             {
                 search = new LuceneContentSearch();
             }
-            /*await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                string RecentlyOpenedJsonString = SettingsContainer.instance.Value.GetValue<string>("recentlyOpened");
-                if (RecentlyOpenedJsonString != null)
-                {
-                    RecentlyOpenedList = JsonConvert.DeserializeObject<List<SearchResult>>(RecentlyOpenedJsonString);
-                    RecentlyOpenedList.ForEach(x => recentFiles.Insert(0, new RecentOpenItem(x)));
-                }
-            });*/
 
             string RecentlyOpenedJsonString = SettingsContainer.instance.Value.GetValue<string>("recentlyOpened");
             if (RecentlyOpenedJsonString != null)
@@ -113,10 +103,8 @@ namespace SonicExplorer
                 RecentlyOpenedList = JsonConvert.DeserializeObject<List<SearchResult>>(RecentlyOpenedJsonString);
                 RecentlyOpenedList.ForEach(x => recentFiles.Insert(0, new RecentOpenItem(x)));
             }
-            _ = Task.Run(async () => await ContentIndexer.GetInstance.IndexData());
         }
 
-        }
 
         private async void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -136,7 +124,8 @@ namespace SonicExplorer
                     isFolder = false
                 };
                 MRUCacheList.instance.AddItem(recent);
-                MRUCacheList.instance.RecentFilesList.ForEach(x => {
+                MRUCacheList.instance.RecentFilesList.ForEach(x =>
+                {
                     int idx = AlreadyPresent(x);
                     if (idx >= 0)
                     {
@@ -183,7 +172,7 @@ namespace SonicExplorer
                 }
             }
         }
-    
+
 
         private async void RecentListView_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -197,7 +186,8 @@ namespace SonicExplorer
                 isFolder = false
             };
             MRUCacheList.instance.AddItem(recent);
-            MRUCacheList.instance.RecentFilesList.ForEach(x => {
+            MRUCacheList.instance.RecentFilesList.ForEach(x =>
+            {
                 int idx = AlreadyPresent(x);
                 if (idx >= 0)
                 {
