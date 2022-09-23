@@ -10,51 +10,54 @@
     d:DesignWidth="1000">
 
     <Grid Background="AliceBlue">
-        <Grid Margin="20,10,20,10" HorizontalAlignment="Center">
+        <Grid Margin="20,0,20,10" HorizontalAlignment="Center">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock FontSize="40" FontWeight="Thin" HorizontalAlignment="Center" FontFamily="Courier New" Text="Welcome to HyperX!" Margin="0,30,0,155" Height="50"/>
-            <Image Source="Assets/RocketImage.png" Height="150" Width="150" Margin="0,200,0,50" HorizontalAlignment="Center"/>
-            <TextBlock Text="Please wait while we are indexing the following locations..." HorizontalAlignment="Center" FontSize="20" Grid.Row="1" Margin="0, 0, 0, 20"/>
-            <Grid Grid.Row="2" HorizontalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="0, 0, 20, 10">
-                    <Image Source="Assets/desktopFolder.png" Height="30" Width="30" Margin="0, 0, 10, 0"/>
-                    <TextBlock VerticalAlignment="Center">Desktop</TextBlock>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Margin="0, 0, 20, 0">
-                    <Image Source="Assets/documentsFolder.jpg" Height="30" Width="30" Margin="0, 0, 10, 0"/>
-                    <TextBlock VerticalAlignment="Center">Documents</TextBlock>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Margin="0, 0, 20, 10">
-                    <Image Source="Assets/downloadsFolder.png" Height="30" Width="30" Margin="0, 0, 10, 0"/>
-                    <TextBlock VerticalAlignment="Center">Downloads</TextBlock>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Margin="0. 0, 20, 0">
-                    <Image Source="Assets/musicFolder.png" Height="30" Width="30" Margin="0, 0, 10, 0"/>
-                    <TextBlock VerticalAlignment="Center">Music</TextBlock>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" Margin="0, 0, 0, 10">
-                    <Image Source="Assets/PictureFolder.jpg" Height="30" Width="30" Margin="0, 0, 10, 0"/>
-                    <TextBlock VerticalAlignment="Center">Pictures</TextBlock>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2">
-                    <Image Source="Assets/videoFolder.png" Height="30" Width="30" Margin="0, 0, 10, 0"/>
-                    <TextBlock VerticalAlignment="Center">Videos</TextBlock>
-                </StackPanel>
-            </Grid>
-            <ProgressBar Grid.Row="2" x:Name="IndexProgress" Minimum="0" Maximum="100" Height="20" Foreground="#6264A7" Width="700" Opacity="100" HorizontalAlignment="Center" Margin="50, 0, 50, 50"/>
+            <TextBlock FontSize="60" FontWeight="Thin" HorizontalAlignment="Center" FontFamily="Aileron" Text="Welcome to HyperX!" Margin="0,100,0,155" Height="60" VerticalAlignment="Top"/>
+            <TextBlock FontSize="25" FontWeight="Light" HorizontalAlignment="Center" Foreground="Gray" FontFamily="Arvo" Text="Smart and Lean file Search engine for Windows" Margin="0,190,0,155" Height="60" VerticalAlignment="Top"/>
+            <Image Source="Assets/RocketImage.png" Height="150" Width="150" Margin="0,280,0,50" HorizontalAlignment="Center"/>
+            <StackPanel Grid.Row="1">
+                <TextBlock Text="Please wait while we're indexing the following locations..." FontFamily="Arvo" HorizontalAlignment="Center" FontWeight="Thin" Foreground="DarkGray" FontSize="20" Grid.Row="1" Margin="0, 0, 0, 0"/>
+                <Grid Grid.Row="1" HorizontalAlignment="Center" Margin="0,50,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="0, 0, 20, 10">
+                        <Image Source="Assets/desktopFolder.png" Height="30" Width="30" Margin="0, 0, 10, 0"/>
+                        <TextBlock VerticalAlignment="Center">Desktop</TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Margin="0, 0, 20, 0">
+                        <Image Source="Assets/documentsFolder.jpg" Height="30" Width="30" Margin="0, 0, 10, 0"/>
+                        <TextBlock VerticalAlignment="Center">Documents</TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Margin="0, 0, 20, 10">
+                        <Image Source="Assets/downloadsFolder.png" Height="30" Width="30" Margin="0, 0, 10, 0"/>
+                        <TextBlock VerticalAlignment="Center">Downloads</TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Margin="0. 0, 20, 0">
+                        <Image Source="Assets/musicFolder.png" Height="30" Width="30" Margin="0, 0, 10, 0"/>
+                        <TextBlock VerticalAlignment="Center">Music</TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" Margin="0, 0, 0, 10">
+                        <Image Source="Assets/PictureFolder.jpg" Height="30" Width="30" Margin="0, 0, 10, 0"/>
+                        <TextBlock VerticalAlignment="Center">Pictures</TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2">
+                        <Image Source="Assets/videoFolder.png" Height="30" Width="30" Margin="0, 0, 10, 0"/>
+                        <TextBlock VerticalAlignment="Center">Videos</TextBlock>
+                    </StackPanel>
+                </Grid>
+                <ProgressBar Grid.Row="2" x:Name="IndexProgress" Minimum="0" Maximum="100" Height="20" Foreground="#6264A7" Width="700" Opacity="100" HorizontalAlignment="Center" Margin="50, 50, 50, 50"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </Page>
