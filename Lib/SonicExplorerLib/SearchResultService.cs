@@ -45,12 +45,25 @@ namespace SonicExplorerLib
             {
                 return;
             }
-            topRank = rank;
             await this.SemaphoreSlim.WaitAsync();
+            if (rank > topRank)
+            {
+                return;
+            }
+            bool removeItems = false;
+            if (rank < topRank)
+            {
+                removeItems = true;
+            }
+            topRank = rank;
             try
             {
                 await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
+                        if (removeItems)
+                        {
+                            SearchResults.Clear();
+                        }
                         if (SearchResults.Count < 20)
                         {
                             paths.ForEach(x => SearchResults.Add(new SearchResultItem(x)));
@@ -64,8 +77,8 @@ namespace SonicExplorerLib
 
         public async Task ClearList()
         {
-            topRank = int.MaxValue;
             await this.SemaphoreSlim.WaitAsync();
+            topRank = int.MaxValue;
             try
             {
                 await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
