@@ -19,14 +19,14 @@ namespace SonicExplorerLib.Models
 {
     public sealed partial class RecentOpenItem : UserControl
     {
-        public RecentOpenItem(RecentItems recentItems)
+        public RecentOpenItem(SearchResult recentItems)
         {
             this.InitializeComponent();
             this.RecentItems = recentItems;
             RecentFontIcon.FontFamily = new FontFamily("Segoe MDL2 Assets");
             RecentFontIcon.Glyph = "\xF000";
         }
-        public RecentItems RecentItems { get; private set; }
+        public SearchResult RecentItems { get; private set; }
         public string Glyph { get; private set; }
 
     }

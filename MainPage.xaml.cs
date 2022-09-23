@@ -1,4 +1,5 @@
 ﻿using DynamicData.Binding;
+using Newtonsoft.Json;
 using SonicExplorerLib;
 using SonicExplorerLib.Models;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Prism.Commands;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.System;
@@ -24,14 +26,19 @@ namespace SonicExplorer
         private LuceneContentSearch search;
         private volatile string lastKey;
         private bool showRecentFiles = true;
+        private List<SearchResult> RecentlyOpenedList;
+        private CoreDispatcher Dispatcher;
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public List<RecentItems> recentPaths;
+        public ObservableCollection<RecentOpenItem> recentFiles;
 
         public MainPage()
         {
             this.InitializeComponent();
-             recentPaths = new List<RecentItems>();
+            this.recentFiles = new ObservableCollection<RecentOpenItem>();
+            this.Dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
             SearchResultService.instance.refreshSearch += ((sender, args) =>
             {
                 search = new LuceneContentSearch();
@@ -62,7 +69,16 @@ namespace SonicExplorer
         }
 
         public ObservableCollection<SearchResultItem> SearchResults => SearchResultService.instance.SearchResults;
-        public ObservableCollection<RecentOpenItem> RecentFiles => MRUCacheList.instance.RecentFilesList;
+        // public ObservableCollection<SearchResult> RecentFiles => this.recentFiles;
+        public ObservableCollection<RecentOpenItem> RecentFiles
+        {
+            get => this.recentFiles;
+            set
+            {
+                this.recentFiles = value;
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(recentFiles)));
+            }
+        }
         
         private void mySearchBox_QuerySubmitted(SearchBox sender, SearchBoxQuerySubmittedEventArgs args)
         {
@@ -82,7 +98,24 @@ namespace SonicExplorer
             {
                 search = new LuceneContentSearch();
             }
+            /*await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                string RecentlyOpenedJsonString = SettingsContainer.instance.Value.GetValue<string>("recentlyOpened");
+                if (RecentlyOpenedJsonString != null)
+                {
+                    RecentlyOpenedList = JsonConvert.DeserializeObject<List<SearchResult>>(RecentlyOpenedJsonString);
+                    RecentlyOpenedList.ForEach(x => recentFiles.Insert(0, new RecentOpenItem(x)));
+                }
+            });*/
+
+            string RecentlyOpenedJsonString = SettingsContainer.instance.Value.GetValue<string>("recentlyOpened");
+            if (RecentlyOpenedJsonString != null)
+            {
+                RecentlyOpenedList = JsonConvert.DeserializeObject<List<SearchResult>>(RecentlyOpenedJsonString);
+                RecentlyOpenedList.ForEach(x => recentFiles.Insert(0, new RecentOpenItem(x)));
+            }
             _ = Task.Run(async () => await ContentIndexer.GetInstance.IndexData());
+        }
+
         }
 
         private async void ListView_ItemClick(object sender, ItemClickEventArgs e)
@@ -96,13 +129,45 @@ namespace SonicExplorer
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(item.SearchResult.path);
                 await Launcher.LaunchFileAsync(file);
-                var recent = new RecentItems
+                var recent = new SearchResult
                 {
                     fileName = file.DisplayName,
                     path = file.Path,
+                    isFolder = false
                 };
                 MRUCacheList.instance.AddItem(recent);
+                MRUCacheList.instance.RecentFilesList.ForEach(x => {
+                    int idx = AlreadyPresent(x);
+                    if (idx >= 0)
+                    {
+                        this.recentFiles.RemoveAt(idx);
+                    }
+
+                    if (this.recentFiles.Count < 4)
+                    {
+                        this.recentFiles.Insert(0, new RecentOpenItem(x));
+                    }
+                    else
+                    {
+                        int lastIdx = this.recentFiles.Count - 1;
+                        this.recentFiles.RemoveAt(lastIdx);
+                        this.recentFiles.Insert(0, new RecentOpenItem(x));
+                    }
+                });
             }
+        }
+
+        public int AlreadyPresent(SearchResult item)
+        {
+            int cnt = this.recentFiles.Count;
+            for (int i = 0; i < cnt; i++)
+            {
+                if (this.recentFiles[i].RecentItems.path == item.path)
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         private void RadioButton_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -125,12 +190,31 @@ namespace SonicExplorer
             RecentOpenItem item = e.ClickedItem as RecentOpenItem;
             StorageFile file = await StorageFile.GetFileFromPathAsync(item.RecentItems.path);
             await Launcher.LaunchFileAsync(file);
-            var recent = new RecentItems
+            var recent = new SearchResult
             {
                 fileName = file.DisplayName,
                 path = file.Path,
+                isFolder = false
             };
             MRUCacheList.instance.AddItem(recent);
+            MRUCacheList.instance.RecentFilesList.ForEach(x => {
+                int idx = AlreadyPresent(x);
+                if (idx >= 0)
+                {
+                    this.recentFiles.RemoveAt(idx);
+                }
+
+                if (this.recentFiles.Count < 4)
+                {
+                    this.recentFiles.Insert(0, new RecentOpenItem(x));
+                }
+                else
+                {
+                    int lastIdx = this.recentFiles.Count - 1;
+                    this.recentFiles.RemoveAt(lastIdx);
+                    this.recentFiles.Insert(0, new RecentOpenItem(x));
+                }
+            });
         }
     }
 }
