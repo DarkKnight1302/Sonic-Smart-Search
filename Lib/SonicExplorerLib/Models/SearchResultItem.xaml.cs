@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Media;
 
 namespace SonicExplorerLib.Models
 {
-    public sealed partial class SearchResultItem : UserControl
+    public sealed partial class SearchResultItem : UserControl, IEquatable<SearchResultItem>
     {
         private ICommand _command1;
         private ICommand _command2;
@@ -45,6 +45,11 @@ namespace SonicExplorerLib.Models
         public ICommand LaunchFileOrFolder => _command1 ??= new DelegateCommand(() => Button_Click_Open());
 
         public ICommand LaunchOpenWith => _command2 ??= new DelegateCommand(() => Button_Click_OpenWith());
+
+        public bool Equals(SearchResultItem other)
+        {
+            return this.SearchResult.path.Equals(other.SearchResult.path);
+        }
 
         private async void Button_Click_Open()
         {

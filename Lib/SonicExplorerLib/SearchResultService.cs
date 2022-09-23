@@ -66,7 +66,14 @@ namespace SonicExplorerLib
                         }
                         if (SearchResults.Count < 20)
                         {
-                            paths.ForEach(x => SearchResults.Add(new SearchResultItem(x)));
+                            paths.ForEach(x =>
+                            {
+                                var result = new SearchResultItem(x);
+                                if (!SearchResults.Contains(result))
+                                {
+                                    SearchResults.Add(result);
+                                }
+                            });
                         }
                     });
             }

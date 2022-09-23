@@ -224,6 +224,12 @@ namespace SonicExplorerLib
                     {
                         return docs;
                     }
+                    var phrase = new FuzzyQuery(new Term("name", substring), 2);
+                    docs = searcher.Search(phrase, 3);
+                    if (docs.TotalHits > 0 || cancellationToken.IsCancellationRequested)
+                    {
+                        return docs;
+                    }
                 }
             }
             return null;
