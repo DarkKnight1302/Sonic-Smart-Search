@@ -23,7 +23,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -68,8 +68,8 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <StackPanel Grid.Column="1" Grid.Row="2">
-            <TextBlock Text="Recent"/>
+        <StackPanel x:Name="RecentFileStack" Grid.Column="1" Grid.Row="2" x:Load="{x:Bind ShowRecentFiles, Mode=OneWay}">
+            <TextBlock Text="Recent Viewed Files"/>
             <ListView ItemsSource="{x:Bind RecentFiles, Mode=OneWay}"
                         IsItemClickEnabled="True"
                         MaxWidth="1000"
