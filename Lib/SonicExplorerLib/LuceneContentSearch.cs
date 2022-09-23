@@ -150,6 +150,16 @@ namespace SonicExplorerLib
             }
             if (!resultFound && !cancellationToken.IsCancellationRequested)
             {
+                var phrase = new FuzzyQuery(new Term("name", keyword), 1);
+                docs = searcher.Search(phrase, 3);
+                if (docs.TotalHits > 0)
+                {
+                    resultFound = true;
+                }
+                rank++;
+            }
+            if (!resultFound && !cancellationToken.IsCancellationRequested)
+            {
                 var phrase = new FuzzyQuery(new Term("name", keyword), 2);
                 docs = searcher.Search(phrase, 3);
                 if (docs.TotalHits > 0)

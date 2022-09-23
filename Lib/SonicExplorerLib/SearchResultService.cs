@@ -46,18 +46,18 @@ namespace SonicExplorerLib
                 return;
             }
             await this.SemaphoreSlim.WaitAsync();
-            if (rank > topRank)
-            {
-                return;
-            }
-            bool removeItems = false;
-            if (rank < topRank)
-            {
-                removeItems = true;
-            }
-            topRank = rank;
             try
             {
+                if (rank > topRank)
+                {
+                    return;
+                }
+                bool removeItems = false;
+                if (rank < topRank)
+                {
+                    removeItems = true;
+                }
+                topRank = rank;
                 await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
                         if (removeItems)
@@ -69,7 +69,8 @@ namespace SonicExplorerLib
                             paths.ForEach(x => SearchResults.Add(new SearchResultItem(x)));
                         }
                     });
-            } finally
+            }
+            finally
             {
                 this.SemaphoreSlim.Release();
             }
