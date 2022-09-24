@@ -10,8 +10,8 @@ using System.Linq;
 using System.Threading;
 using SonicExplorerLib.Models;
 using System.Collections.Concurrent;
-using System.Reactive.Concurrency;
 using Lucene.Net.Documents;
+
 
 namespace SonicExplorerLib
 {
@@ -120,6 +120,7 @@ namespace SonicExplorerLib
             {
                 Task.Run(() => PushToResult(docs, rank, searcher));
                 resultFound = true;
+                source.Cancel();
             }
 
             var wildcardQuery = new WildcardQuery(new Term("name", $"*{keyword}*"));
@@ -129,6 +130,7 @@ namespace SonicExplorerLib
             {
                 resultFound = true;
                 Task.Run(() => PushToResult(docs, rank, searcher));
+                source.Cancel();
                 return true;
             }
 
@@ -142,6 +144,7 @@ namespace SonicExplorerLib
                 {
                     resultFound = true;
                     Task.Run(() => PushToResult(docs, rank, searcher));
+                    source.Cancel();
                     return true;
                 }
                 string[] splitwords = keyword.Split(' ');
@@ -162,7 +165,7 @@ namespace SonicExplorerLib
                 {
                     foreach (string split in splitwords)
                     {
-                       Task.Run(() => GetFilePaths(searcher, split, cancellationToken, source, rank + 1));
+                        Task.Run(() => GetFilePaths(searcher, split, cancellationToken, source, rank + 1));
                     }
                 }
                 return true;
@@ -179,6 +182,7 @@ namespace SonicExplorerLib
                 docs = searcher.Search(phrase, 3);
                 if (docs.TotalHits > 0)
                 {
+                    source.Cancel();
                     resultFound = true;
                 }
                 rank++;
@@ -189,9 +193,20 @@ namespace SonicExplorerLib
                 docs = searcher.Search(phrase, 3);
                 if (docs.TotalHits > 0)
                 {
+                    source.Cancel();
                     resultFound = true;
                 }
                 rank++;
+            }
+            if (!resultFound && !cancellationToken.IsCancellationRequested)
+            {
+                rank++;
+                docs = InternalWildCardMatching(searcher, keyword, cancellationToken);
+                if (docs != null && docs.TotalHits > 0)
+                {
+                    source.Cancel();
+                    resultFound = true;
+                }
             }
             if (!resultFound && !cancellationToken.IsCancellationRequested)
             {
@@ -293,6 +308,12 @@ namespace SonicExplorerLib
                 return new Tuple<TopDocs, int>(docs, 20);
             }
 
+            docs = InternalWildCardMatching(searcher, keyword, cancellationToken);
+            if (docs != null && docs.TotalHits > 0)
+            {
+                return new Tuple<TopDocs, int>(docs, 15);
+            }
+
             Tuple<TopDocs, int> topDocTuple = SubstringMatching(searcher, keyword, cancellationToken);
             if (topDocTuple != null && topDocTuple.Item1.TotalHits > 0)
             {
@@ -303,6 +324,10 @@ namespace SonicExplorerLib
 
         private void PushToResult(TopDocs docs, int rank, IndexSearcher searcher)
         {
+            if (docs == null)
+            {
+                return;
+            }
             List<SearchResult> paths = new List<SearchResult>();
             foreach (ScoreDoc hit in docs.ScoreDocs)
             {
@@ -328,6 +353,21 @@ namespace SonicExplorerLib
             SearchResultService.instance.AddItem(result, rank);
         }
 
+        private TopDocs InternalWildCardMatching(IndexSearcher searcher, string keyword, CancellationToken cancellationToken)
+        {
+            for (int i = 1; i < keyword.Length; i++)
+            {
+                string injectWildCard = $"{keyword.Substring(0, i)}*{keyword.Substring(i, (keyword.Length - i))}";
+                var wildcardQuery = new WildcardQuery(new Term("name", $"*{injectWildCard}*"));
+                var docs = searcher.Search(wildcardQuery, 3);
+                if (docs.TotalHits > 0 || cancellationToken.IsCancellationRequested)
+                {
+                    return docs;
+                }
+            }
+            return null;
+        }
+
         private Tuple<TopDocs, int> SubstringMatching(IndexSearcher searcher, string keyword, CancellationToken cancellationToken)
         {
             int size = keyword.Length;
@@ -340,7 +380,7 @@ namespace SonicExplorerLib
                     var docs = searcher.Search(wildcardQuery, 3);
                     if (docs.TotalHits > 0 || cancellationToken.IsCancellationRequested)
                     {
-                        return new Tuple<TopDocs,int>(docs, window);
+                        return new Tuple<TopDocs, int>(docs, window);
                     }
                     var phrase = new FuzzyQuery(new Term("name", substring), 2);
                     docs = searcher.Search(phrase, 3);
