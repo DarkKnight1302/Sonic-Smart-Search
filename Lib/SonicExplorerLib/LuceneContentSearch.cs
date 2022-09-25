@@ -90,7 +90,7 @@ namespace SonicExplorerLib
             CancellationTokenSource source = new CancellationTokenSource();
             foreach (IndexSearcher searcher in searchers)
             {
-                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source, 0)));
+                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source, 0, false)));
             }
         }
 
@@ -106,12 +106,20 @@ namespace SonicExplorerLib
             CancellationTokenSource source = new CancellationTokenSource();
             foreach (IndexSearcher searcher in searchers)
             {
-                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source, 0)));
+                searchTasks.Add(Task.Run(() => GetFilePaths(searcher, keyword, source.Token, source, 0, false)));
             }
         }
 
-        private bool GetFilePaths(IndexSearcher searcher, string keyword, CancellationToken cancellationToken, CancellationTokenSource source, int rank)
+        private bool GetFilePaths(IndexSearcher searcher, string keyword, CancellationToken cancellationToken, CancellationTokenSource source, int rank, bool split)
         {
+            if (keyword.Length == 1)
+            {
+                return false;
+            }
+            if (keyword.Length < 3)
+            {
+                rank+= 20;
+            }
             bool resultFound = false;
             TermQuery termQuery = new TermQuery(new Term("name", keyword));
             TopDocs docs = searcher.Search(termQuery, 10);
@@ -120,7 +128,10 @@ namespace SonicExplorerLib
             {
                 Task.Run(() => PushToResult(docs, rank, searcher));
                 resultFound = true;
-                source.Cancel();
+                if (!split)
+                {
+                    source.Cancel();
+                }
             }
 
             var wildcardQuery = new WildcardQuery(new Term("name", $"*{keyword}*"));
@@ -130,7 +141,10 @@ namespace SonicExplorerLib
             {
                 resultFound = true;
                 Task.Run(() => PushToResult(docs, rank, searcher));
-                source.Cancel();
+                if (!split)
+                {
+                    source.Cancel();
+                }
                 return true;
             }
 
@@ -163,9 +177,9 @@ namespace SonicExplorerLib
                 }
                 else
                 {
-                    foreach (string split in splitwords)
+                    foreach (string splitK in splitwords)
                     {
-                        Task.Run(() => GetFilePaths(searcher, split, cancellationToken, source, rank + 1));
+                        Task.Run(() => GetFilePaths(searcher, splitK.Trim(), cancellationToken, source, rank + 1, true));
                     }
                 }
                 return true;
@@ -178,14 +192,17 @@ namespace SonicExplorerLib
 
             if (!resultFound && !cancellationToken.IsCancellationRequested)
             {
+                rank++;
                 var phrase = new FuzzyQuery(new Term("name", keyword), 1);
                 docs = searcher.Search(phrase, 3);
                 if (docs.TotalHits > 0)
                 {
-                    source.Cancel();
+                    if (!split)
+                    {
+                        source.Cancel();
+                    }
                     resultFound = true;
                 }
-                rank++;
             }
             if (!resultFound && !cancellationToken.IsCancellationRequested)
             {
@@ -193,7 +210,10 @@ namespace SonicExplorerLib
                 docs = searcher.Search(phrase, 3);
                 if (docs.TotalHits > 0)
                 {
-                    source.Cancel();
+                    if (!split)
+                    {
+                        source.Cancel();
+                    }
                     resultFound = true;
                 }
                 rank++;
@@ -204,7 +224,10 @@ namespace SonicExplorerLib
                 docs = InternalWildCardMatching(searcher, keyword, cancellationToken);
                 if (docs != null && docs.TotalHits > 0)
                 {
-                    source.Cancel();
+                    if (!split)
+                    {
+                        source.Cancel();
+                    }
                     resultFound = true;
                 }
             }
@@ -228,7 +251,10 @@ namespace SonicExplorerLib
                 Debug.WriteLine($"IS cancellation requested {cancellationToken.IsCancellationRequested}");
                 return false;
             }
-            source.Cancel();
+            if (!split)
+            {
+                source.Cancel();
+            }
             PushToResult(docs, rank, searcher);
             return true;
         }

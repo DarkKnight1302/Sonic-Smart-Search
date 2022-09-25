@@ -53,6 +53,8 @@ namespace SonicExplorer
 
         public bool ShowWelcome => SettingsContainer.instance.Value.GetValue<bool>("indexingComplete") != true;
 
+        public string IndexRefreshAt => $"Index refreshed at : {SettingsContainer.instance.Value.GetValue<DateTimeOffset>("indexingTime").LocalDateTime}";
+
         public bool ShowRecentFiles
         {
             get => this.showRecentFiles;
