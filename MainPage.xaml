@@ -71,9 +71,10 @@
         </ListView>
         <StackPanel x:Name="RecentFileStack" Grid.Column="1" Grid.Row="2" x:Load="{x:Bind ShowRecentFiles, Mode=OneWay}" Margin="0,0,0,50">
             <muxc:Expander
+                IsExpanded="True"
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"
-                Header="Recent Viewed Files"
+                Header="Recently Viewed Files"
                 Background="AliceBlue"
                 Foreground="AliceBlue"
                 BorderBrush="AliceBlue"
@@ -81,18 +82,20 @@
                 <ListView ItemsSource="{x:Bind RecentFiles, Mode=OneWay}"
                             IsItemClickEnabled="True"
                             MaxWidth="1000"
-                            Margin="50,20,0,0"
+                            Margin="10,5,0,0"
                             ItemClick="RecentListView_ItemClick"
                             VerticalAlignment="Top"
                             HorizontalAlignment="Left">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="BorderThickness" Value="2"/>
-                            <Setter Property="Margin" Value="0,2,0,0"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
                 </ListView>
             </muxc:Expander>
         </StackPanel>
+        <TextBlock Grid.Row="2" Grid.Column="1" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Bottom"
+                   FontSize="10"
+                   d:Text="Index refreshed at"
+                   Style="{StaticResource CaptionSecondary}"
+                    Margin="0,0,0,10"
+                   Text="{x:Bind IndexRefreshAt}"/>
     </Grid>
 </Page>

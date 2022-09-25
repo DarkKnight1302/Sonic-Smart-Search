@@ -112,6 +112,7 @@ namespace SonicExplorerLib
                 this.IndexingPercentage = 100;
                 SettingsContainer.instance.Value.SetValue<bool>("indexingComplete", true);
                 SearchResultService.instance.RefreshSearch();
+                SettingsContainer.instance.Value.SetValue<DateTimeOffset>("indexingTime", DateTimeOffset.Now);
             }
             catch (UnauthorizedAccessException)
             {
@@ -125,11 +126,12 @@ namespace SonicExplorerLib
 
         public async Task IndexDataInBackground()
         {
+            DeleteAllIndexData();
+            StorageFolder downloadsFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Downloads");
             StorageFolder documentsFolder = KnownFolders.DocumentsLibrary;
             StorageFolder picturesFolder = KnownFolders.PicturesLibrary;
             StorageFolder musicFolder = KnownFolders.MusicLibrary;
             StorageFolder videosFolder = KnownFolders.VideosLibrary;
-            StorageFolder downloadsFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Downloads");
             StorageFolder desktopFolder;
             try
             {
@@ -173,6 +175,7 @@ namespace SonicExplorerLib
             }));
             Task.WaitAll(indexingTasks.ToArray());
             SettingsContainer.instance.Value.SetValue<bool>("indexingComplete", true);
+            SettingsContainer.instance.Value.SetValue<DateTimeOffset>("indexingTime", DateTimeOffset.Now);
         }
 
         private async Task IndexDataForLocation(string location, StorageFolder storageFolder)
@@ -285,7 +288,6 @@ namespace SonicExplorerLib
                 }
             }
             SettingsContainer.instance.Value.SetValue<bool>("indexingComplete", false);
-            SearchResultService.instance.RefreshSearch();
         }
     }
 }
