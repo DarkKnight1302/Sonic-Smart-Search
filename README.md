@@ -1,1 +1,1 @@
-# SonicExplorer
+# HyperX
