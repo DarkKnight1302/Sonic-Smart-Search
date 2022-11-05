@@ -60,8 +60,15 @@ namespace SonicExplorerLib
                 StorageFolder picturesFolder = KnownFolders.PicturesLibrary;
                 StorageFolder musicFolder = KnownFolders.MusicLibrary;
                 StorageFolder videosFolder = KnownFolders.VideosLibrary;
-                StorageFolder desktopFolder;
-                StorageFolder downloadsFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Downloads");
+                StorageFolder desktopFolder = null;
+                StorageFolder downloadsFolder = null;
+                try
+                {
+                    downloadsFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Downloads");
+                } catch (Exception)
+                {
+                    // do nothing;
+                }
                 try
                 {
                     desktopFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\Desktop");
@@ -74,7 +81,13 @@ namespace SonicExplorerLib
                     }
                     catch (Exception)
                     {
-                        desktopFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\OneDrive - Microsoft\\Desktop");
+                        try
+                        {
+                            desktopFolder = await StorageFolder.GetFolderFromPathAsync($"{userProfile}\\OneDrive - Microsoft\\Desktop");
+                        } catch (Exception)
+                        {
+                            // do nothing;
+                        }
                     }
                 }
                 List<Task> indexingTasks = new List<Task>();
@@ -83,16 +96,22 @@ namespace SonicExplorerLib
                     await IndexDataForLocation(IndexedLocations[0], documentsFolder);
                     this.IndexingPercentage = this.indexingPercent + 16;
                 }));
-                indexingTasks.Add(Task.Run(async () =>
+                if (downloadsFolder != null)
                 {
-                    await IndexDataForLocation(IndexedLocations[1], downloadsFolder);
-                    this.IndexingPercentage = this.indexingPercent + 16;
-                }));
-                indexingTasks.Add(Task.Run(async () =>
+                    indexingTasks.Add(Task.Run(async () =>
+                    {
+                        await IndexDataForLocation(IndexedLocations[1], downloadsFolder);
+                        this.IndexingPercentage = this.indexingPercent + 16;
+                    }));
+                }
+                if (desktopFolder != null)
                 {
-                    await IndexDataForLocation(IndexedLocations[2], desktopFolder);
-                    this.IndexingPercentage = this.indexingPercent + 16;
-                }));
+                    indexingTasks.Add(Task.Run(async () =>
+                    {
+                        await IndexDataForLocation(IndexedLocations[2], desktopFolder);
+                        this.IndexingPercentage = this.indexingPercent + 16;
+                    }));
+                }
                 indexingTasks.Add(Task.Run(async () =>
                 {
                     await IndexDataForLocation(IndexedLocations[3], picturesFolder);
@@ -121,6 +140,9 @@ namespace SonicExplorerLib
                 {
                     await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-broadfilesystemaccess"));
                 });
+            } catch (Exception e)
+            {
+                // Catching generic exceptions;
             }
         }
 
