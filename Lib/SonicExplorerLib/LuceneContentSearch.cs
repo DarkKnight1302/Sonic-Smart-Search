@@ -307,14 +307,14 @@ namespace SonicExplorerLib
         private Tuple<TopDocs, int> SplitKeySearch(IndexSearcher searcher, string keyword, CancellationToken cancellationToken)
         {
             TermQuery termQuery = new TermQuery(new Term("name", keyword));
-            TopDocs docs = searcher.Search(termQuery, 10);
+            TopDocs docs = searcher.Search(termQuery, 20);
             if (docs.TotalHits > 0)
             {
                 return new Tuple<TopDocs, int>(docs, 100);
             }
 
             var wildcardQuery = new WildcardQuery(new Term("name", $"*{keyword}*"));
-            docs = searcher.Search(wildcardQuery, 10);
+            docs = searcher.Search(wildcardQuery, 20);
             if (docs.TotalHits > 0)
             {
                 return new Tuple<TopDocs, int>(docs, 100);
