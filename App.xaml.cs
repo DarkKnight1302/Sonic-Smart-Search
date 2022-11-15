@@ -103,8 +103,8 @@ namespace SonicExplorer
                     SecondaryButtonCommand = new DelegateCommand(async () => await ApplicationView.GetForCurrentView().TryConsolidateAsync()),
                     PrimaryButtonCommand = new DelegateCommand(async () => await Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-broadfilesystemaccess"))),
                     DefaultButton = ContentDialogButton.Primary,
-                    Title = "Allow File System Access to 'HyperX'",
-                    Content = "HyperX needs to be relaunched post access grant.",
+                    Title = "Allow File System Access to 'Sonic Smart Search'",
+                    Content = "Sonic Smart Search needs to be relaunched post access grant.",
                 };
                 await contentDialog.ShowAsync();
                 SettingsContainer.instance.Value.SetValue("accessGiven", true);

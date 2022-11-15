@@ -15,7 +15,7 @@
 	<Identity
 	  Name="49452RobinParashar.HyperX"
 	  Publisher="CN=DA77D6A3-6719-4BE4-B690-4193F233DE42"
-	  Version="1.0.11.0" />
+	  Version="1.0.12.0" />
 
 	<mp:PhoneIdentity PhoneProductId="48dbb9e5-b298-4bcc-bb6c-071f469a4d37" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -39,7 +39,7 @@
 		  Executable="$targetnametoken$.exe"
 		  EntryPoint="SonicExplorer.App">
 			<uap:VisualElements
-			  DisplayName="HyperX"
+			  DisplayName="Sonic Smart Search"
 			  Square150x150Logo="Assets\Square150x150Logo.png"
 			  Square44x44Logo="Assets\Square44x44Logo.png"
 			  Description="Smart Search for Windows"
