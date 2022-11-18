@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -17,9 +19,6 @@ namespace SonicExplorerLib.Models
 {
     public sealed partial class SearchResultItem : UserControl, IEquatable<SearchResultItem>
     {
-        private ICommand _command1;
-        private ICommand _command2;
-
         public SearchResultItem(SearchResult searchResult)
         {
             this.InitializeComponent();
@@ -42,16 +41,12 @@ namespace SonicExplorerLib.Models
         public bool ShowOpenWith => !this.SearchResult.isFolder;
         public bool ShowOpenInExplorer => this.SearchResult.isFolder;
 
-        public ICommand LaunchFileOrFolder => _command1 ??= new DelegateCommand(() => Button_Click_Open());
-
-        public ICommand LaunchOpenWith => _command2 ??= new DelegateCommand(() => Button_Click_OpenWith());
-
         public bool Equals(SearchResultItem other)
         {
             return this.SearchResult.path.Equals(other.SearchResult.path);
         }
 
-        private async void Button_Click_Open()
+        private async Task Button_Click_Open(bool openInExplorer)
         {
             if (this.SearchResult.isFolder)
             {
@@ -59,6 +54,15 @@ namespace SonicExplorerLib.Models
             } else
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(this.SearchResult.path);
+                if (openInExplorer || ((int)file.Attributes) > 300)
+                {
+                    var parent = await file.GetParentAsync();
+                    var folderOptions = new FolderLauncherOptions();
+                    folderOptions.ItemsToSelect.Clear();
+                    folderOptions.ItemsToSelect.Add(file);
+                    await Launcher.LaunchFolderPathAsync(parent.Path, folderOptions);
+                    return;
+                }
                 await Launcher.LaunchFileAsync(file);
                 var recent = new SearchResult
                 {
@@ -70,9 +74,18 @@ namespace SonicExplorerLib.Models
             }
         }
 
-        private async void Button_Click_OpenWith()
+        private async Task Button_Click_OpenWith()
         {
             StorageFile file = await StorageFile.GetFileFromPathAsync(this.SearchResult.path);
+            if (file != null && ((int)file.Attributes) > 300)
+            {
+                var parent = await file.GetParentAsync();
+                var folderOptions = new FolderLauncherOptions();
+                folderOptions.ItemsToSelect.Clear();
+                folderOptions.ItemsToSelect.Add(file);
+                await Launcher.LaunchFolderPathAsync(parent.Path, folderOptions);
+                return;
+            }
             await Launcher.LaunchFileAsync(file, new LauncherOptions
             {
                 DisplayApplicationPicker = true
@@ -84,6 +97,21 @@ namespace SonicExplorerLib.Models
                 isFolder = false
             };
             MRUCacheList.instance.AddItem(recent);
+        }
+
+        private async void Button1_Click(object sender, RoutedEventArgs e)
+        {
+            await Button_Click_OpenWith();
+        }
+
+        private async void Button2_Click(object sender, RoutedEventArgs e)
+        {
+            await Button_Click_Open(false);
+        }
+
+        private async void Button3_Click(object sender, RoutedEventArgs e)
+        {
+            await Button_Click_Open(true);
         }
     }
 }

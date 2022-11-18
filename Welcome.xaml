@@ -16,7 +16,7 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBlock FontSize="60" FontWeight="Thin" HorizontalAlignment="Center" FontFamily="Aileron" Text="Welcome to HyperX!" Margin="0,100,0,155" Height="60" VerticalAlignment="Top"/>
+            <TextBlock FontSize="60" FontWeight="Thin" HorizontalAlignment="Center" FontFamily="Aileron" Text="Welcome to Sonic Smart Search!" Margin="0,100,0,155" Height="60" VerticalAlignment="Top"/>
             <TextBlock FontSize="25" FontWeight="Light" HorizontalAlignment="Center" Foreground="Gray" FontFamily="Arvo" Text="Smart and Lean file Search engine for Windows" Margin="0,190,0,155" Height="60" VerticalAlignment="Top"/>
             <Image Source="Assets/RocketImage.png" Height="150" Width="150" Margin="0,280,0,50" HorizontalAlignment="Center"/>
             <StackPanel Grid.Row="1">
