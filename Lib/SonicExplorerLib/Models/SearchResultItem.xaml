@@ -10,7 +10,8 @@
     mc:Ignorable="d"
     Width="1000"
     d:DesignHeight="50"
-    d:DesignWidth="400">
+    d:DesignWidth="400"
+    Loaded="UserControl_Loaded">
     <UserControl.Resources>
         <media:AttachedCardShadow x:Key="CommonShadow" Offset="1" BlurRadius="5"/>
     </UserControl.Resources>
@@ -19,6 +20,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <FontIcon
@@ -39,11 +41,13 @@
                     Style="{StaticResource CaptionSecondary}"
                     Foreground="Gray" />
                 </StackPanel>
-                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="2" Margin="5,0,5,0">
+            <TextBlock Grid.Column="2" Text="On Cloud" Style="{StaticResource CaptionSecondary}"
+                       VerticalAlignment="Center" Foreground="OrangeRed" Name="OnCloud" x:Load="{x:Bind ShowOnCloud, Mode=OneWay}"></TextBlock>
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="3" Margin="5,0,5,0">
                     <Button x:Name="Button1" Margin="5,0,5,0" Content="Open with" Style="{StaticResource TextBlockButtonStyle}" 
-                        x:Load="{x:Bind ShowOpenWith}" Click="Button1_Click"></Button>
+                        x:Load="{x:Bind ShowOpenWith, Mode=OneWay}" Click="Button1_Click"></Button>
                     <Button x:Name="Button2" Margin="5,0,5,0" Content="Open" Style="{StaticResource TextBlockButtonStyle}"
-                        x:Load="{x:Bind ShowOpenWith}" Click="Button2_Click"></Button>
+                        x:Load="{x:Bind ShowOpenWith, Mode=OneWay}" Click="Button2_Click"></Button>
                     <Button x:Name="Button3" Margin="5,0,5,0" Content="Open in explorer" Style="{StaticResource TextBlockButtonStyle}"
                        Click="Button3_Click"></Button>
                 </StackPanel>

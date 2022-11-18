@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -17,8 +18,10 @@ using Windows.UI.Xaml.Shapes;
 
 namespace SonicExplorerLib.Models
 {
-    public sealed partial class SearchResultItem : UserControl, IEquatable<SearchResultItem>
+    public sealed partial class SearchResultItem : UserControl, INotifyPropertyChanged, IEquatable<SearchResultItem>
     {
+        private int fileAttributeCode = 300;
+
         public SearchResultItem(SearchResult searchResult)
         {
             this.InitializeComponent();
@@ -38,8 +41,12 @@ namespace SonicExplorerLib.Models
 
         public string Glyph { get; private set; }
 
-        public bool ShowOpenWith => !this.SearchResult.isFolder;
+        public bool ShowOnCloud { get; set; }
+
+        public bool ShowOpenWith => !this.SearchResult.isFolder && !ShowOnCloud;
         public bool ShowOpenInExplorer => this.SearchResult.isFolder;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public bool Equals(SearchResultItem other)
         {
@@ -54,7 +61,7 @@ namespace SonicExplorerLib.Models
             } else
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(this.SearchResult.path);
-                if (openInExplorer || ((int)file.Attributes) > 300)
+                if (openInExplorer || ((int)file.Attributes) >= fileAttributeCode)
                 {
                     var parent = await file.GetParentAsync();
                     var folderOptions = new FolderLauncherOptions();
@@ -77,7 +84,7 @@ namespace SonicExplorerLib.Models
         private async Task Button_Click_OpenWith()
         {
             StorageFile file = await StorageFile.GetFileFromPathAsync(this.SearchResult.path);
-            if (file != null && ((int)file.Attributes) > 300)
+            if (file != null && ((int)file.Attributes) >= fileAttributeCode)
             {
                 var parent = await file.GetParentAsync();
                 var folderOptions = new FolderLauncherOptions();
@@ -112,6 +119,20 @@ namespace SonicExplorerLib.Models
         private async void Button3_Click(object sender, RoutedEventArgs e)
         {
             await Button_Click_Open(true);
+        }
+
+        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!this.SearchResult.isFolder)
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(this.SearchResult.path);
+                if (file != null && ((int)file.Attributes) >= fileAttributeCode)
+                {
+                    this.ShowOnCloud = true;
+                    this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(this.ShowOnCloud)));
+                    this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(this.ShowOpenWith)));
+                }
+            }
         }
     }
 }
