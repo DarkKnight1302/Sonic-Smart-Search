@@ -20,7 +20,8 @@ namespace SonicExplorerLib.Models
 {
     public sealed partial class SearchResultItem : UserControl, INotifyPropertyChanged, IEquatable<SearchResultItem>
     {
-        private int fileAttributeCode = 300;
+        private static int fileAttributeCode = 300;
+        private static HashSet<string> imageFileExtensions = new HashSet<string>() {"jpeg","jpg","png","gif"};
 
         public SearchResultItem(SearchResult searchResult)
         {
@@ -33,7 +34,22 @@ namespace SonicExplorerLib.Models
             }
             else
             {
-                ResultFontIcon.Glyph = "\xF000";
+                try
+                {
+                    var splitExtension = searchResult.fileName.Split('.');
+                    if (imageFileExtensions.Contains(splitExtension[splitExtension.Length - 1].ToLower()))
+                    {
+                        ResultFontIcon.Glyph = "\xE8B9";
+                    } else
+                    {
+                        ResultFontIcon.Glyph = "\xF000";
+                    }
+                }
+                catch(Exception e)
+                {
+                    ResultFontIcon.Glyph = "\xF000";
+                    Console.WriteLine(e.Message);
+                }
             }
         }
 
