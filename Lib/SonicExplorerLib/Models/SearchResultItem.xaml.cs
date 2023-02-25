@@ -1,4 +1,5 @@
 ﻿using Prism.Commands;
+using SonicExplorerLib.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,7 +22,6 @@ namespace SonicExplorerLib.Models
     public sealed partial class SearchResultItem : UserControl, INotifyPropertyChanged, IEquatable<SearchResultItem>
     {
         private static int fileAttributeCode = 300;
-        private static HashSet<string> imageFileExtensions = new HashSet<string>() {"jpeg","jpg","png","gif"};
 
         public SearchResultItem(SearchResult searchResult)
         {
@@ -36,14 +36,7 @@ namespace SonicExplorerLib.Models
             {
                 try
                 {
-                    var splitExtension = searchResult.fileName.Split('.');
-                    if (imageFileExtensions.Contains(splitExtension[splitExtension.Length - 1].ToLower()))
-                    {
-                        ResultFontIcon.Glyph = "\xE8B9";
-                    } else
-                    {
-                        ResultFontIcon.Glyph = "\xF000";
-                    }
+                    ResultFontIcon.Glyph = GlyphIconForFile.GetGlyphIconClass(searchResult.fileName);
                 }
                 catch(Exception e)
                 {
@@ -77,6 +70,13 @@ namespace SonicExplorerLib.Models
             } else
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(this.SearchResult.path);
+                var recent = new SearchResult
+                {
+                    fileName = file.DisplayName,
+                    path = file.Path,
+                    isFolder = false
+                };
+                MRUCacheList.instance.AddItem(recent);
                 if (openInExplorer || ((int)file.Attributes) >= fileAttributeCode)
                 {
                     var parent = await file.GetParentAsync();
@@ -87,19 +87,19 @@ namespace SonicExplorerLib.Models
                     return;
                 }
                 await Launcher.LaunchFileAsync(file);
-                var recent = new SearchResult
-                {
-                    fileName = file.DisplayName,
-                    path = file.Path,
-                    isFolder = false
-                };
-                MRUCacheList.instance.AddItem(recent);
             }
         }
 
         private async Task Button_Click_OpenWith()
         {
             StorageFile file = await StorageFile.GetFileFromPathAsync(this.SearchResult.path);
+            var recent = new SearchResult
+            {
+                fileName = file.DisplayName,
+                path = file.Path,
+                isFolder = false
+            };
+            MRUCacheList.instance.AddItem(recent);
             if (file != null && ((int)file.Attributes) >= fileAttributeCode)
             {
                 var parent = await file.GetParentAsync();
@@ -113,13 +113,6 @@ namespace SonicExplorerLib.Models
             {
                 DisplayApplicationPicker = true
             });
-            var recent = new SearchResult
-            {
-                fileName = file.DisplayName,
-                path = file.Path,
-                isFolder = false
-            };
-            MRUCacheList.instance.AddItem(recent);
         }
 
         private async void Button1_Click(object sender, RoutedEventArgs e)

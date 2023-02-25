@@ -13,6 +13,7 @@ using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
+using SonicExplorerLib.Utils;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -25,7 +26,7 @@ namespace SonicExplorer
     {
         private LuceneContentSearch search;
         private volatile string lastKey;
-        private bool showRecentFiles = true;
+        private bool showRecentFiles = SettingsContainer.instance.Value.GetValue<string>("recentlyOpened") != null;
         private List<SearchResult> RecentlyOpenedList;
 
 
@@ -64,6 +65,10 @@ namespace SonicExplorer
                 {
                     this.showRecentFiles = value;
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ShowRecentFiles)));
+                    if (value == false)
+                    {
+                        SettingsContainer.instance.Value.SetValue<string>("recentlyOpened", null);
+                    }
                 }
             }
         }
@@ -99,12 +104,21 @@ namespace SonicExplorer
                 search = new LuceneContentSearch();
             }
 
-            string RecentlyOpenedJsonString = SettingsContainer.instance.Value.GetValue<string>("recentlyOpened");
-            if (RecentlyOpenedJsonString != null)
+            PostBootQueue.PushToQueue(() =>
             {
-                RecentlyOpenedList = JsonConvert.DeserializeObject<List<SearchResult>>(RecentlyOpenedJsonString);
-                RecentlyOpenedList.ForEach(x => recentFiles.Insert(0, new RecentOpenItem(x)));
-            }
+                string RecentlyOpenedJsonString = SettingsContainer.instance.Value.GetValue<string>("recentlyOpened");
+                if (RecentlyOpenedJsonString != null)
+                {
+                    RecentlyOpenedList = JsonConvert.DeserializeObject<List<SearchResult>>(RecentlyOpenedJsonString);
+                    _ = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                   () =>
+                   {
+                       RecentlyOpenedList.ForEach(x => recentFiles.Insert(0, new RecentOpenItem(x)));
+                   });
+
+                }
+            });
+            Task.Run(() => PostBootQueue.ExecuteQueue());
         }
 
 

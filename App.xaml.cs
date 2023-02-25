@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using SonicExplorerLib;
 using SonicExplorerLib.BackgroundTaskImpl;
+using SonicExplorerLib.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -49,7 +50,7 @@ namespace SonicExplorer
         /// <param name="e">Details about the launch request and process.</param>
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
-            _ = Task.Run(() => TimerTaskImpl.Instance.Register());
+            PostBootQueue.PushToQueue(() => TimerTaskImpl.Instance.Register());
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,

@@ -18,16 +18,16 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <PackageCertificateKeyFile>SonicExplorer_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <AppInstallerUri>C:\My_Projects\SonicExplorer</AppInstallerUri>
     <HoursBetweenUpdateChecks>120</HoursBetweenUpdateChecks>
-    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">

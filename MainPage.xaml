@@ -25,6 +25,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -69,33 +70,33 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <StackPanel x:Name="RecentFileStack" Grid.Column="1" Grid.Row="2" x:Load="{x:Bind ShowRecentFiles, Mode=OneWay}" Margin="0,0,0,50">
-            <muxc:Expander
+        <muxc:Expander
                 IsExpanded="True"
                 HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                Header="Recently Viewed Files"
+                HorizontalContentAlignment="Left"
+                Header="Recently Opened Files"
                 Background="AliceBlue"
                 Foreground="AliceBlue"
                 BorderBrush="AliceBlue"
-                >
-                <ListView ItemsSource="{x:Bind RecentFiles, Mode=OneWay}"
+                Grid.Column="1" Grid.Row="2"
+                Visibility="{x:Bind ShowRecentFiles, Mode=OneWay}"
+                Margin="0,0,0,20">
+            <ListView ItemsSource="{x:Bind RecentFiles, Mode=OneWay}"
                             IsItemClickEnabled="True"
                             MaxWidth="1000"
-                            Margin="10,5,0,0"
+                            Margin="0,0,0,0"
                             ItemClick="RecentListView_ItemClick"
                             VerticalAlignment="Top"
                             HorizontalAlignment="Left">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="Margin" Value="0,2,0,0"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
-            </muxc:Expander>
-        </StackPanel>
-        <TextBlock Grid.Row="2" Grid.Column="1" 
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Margin" Value="0,0,0,0"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </muxc:Expander>
+        <TextBlock Grid.Row="3" Grid.Column="1" 
                    HorizontalAlignment="Center" 
                    VerticalAlignment="Bottom"
                    FontSize="10"

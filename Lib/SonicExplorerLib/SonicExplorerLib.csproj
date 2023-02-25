@@ -138,6 +138,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchResultService.cs" />
     <Compile Include="SettingsContainer.cs" />
+    <Compile Include="Utils\GlyphIconForFile.cs" />
+    <Compile Include="Utils\PostBootQueue.cs" />
     <EmbeddedResource Include="Properties\SonicExplorerLib.rd.xml" />
   </ItemGroup>
   <ItemGroup>
