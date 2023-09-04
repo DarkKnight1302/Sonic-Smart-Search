@@ -33,7 +33,7 @@ namespace SonicExplorerLib.BackgroundTaskImpl
             new SystemCondition(SystemConditionType.UserPresent),
        };
 
-        protected override IBackgroundTrigger MakeTrigger() => new TimeTrigger(15, false);
+        protected override IBackgroundTrigger MakeTrigger() => new TimeTrigger(150, false);
 
         protected override async Task RunAsync(IBackgroundTaskInstance taskInstance, CancellationToken token)
         {
